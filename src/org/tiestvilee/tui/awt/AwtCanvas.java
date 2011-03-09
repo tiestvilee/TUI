@@ -1,8 +1,8 @@
 package org.tiestvilee.tui.awt;
 
 import java.awt.Canvas;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferStrategy;
 
 import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Tixel;
@@ -15,25 +15,41 @@ public class AwtCanvas extends Canvas {
 
 	private final View view;
 
+	private BufferStrategy strategy;
+
 	public AwtCanvas(View view) {
 		this.view = view;
+		setBounds(0,0,640,480);
+		setIgnoreRepaint(true);
 	}
 
-	public void paint(final Graphics g) {
-		super.paint(g);
+	public void showYourself() {
+		createBufferStrategy(2);
+		strategy = getBufferStrategy();
+		
+		long currentTime = System.currentTimeMillis();
+		while(true) {
+			paintIt();
+			try{
+				// 30 frames per second
+				Thread.sleep((1000/30) - (System.currentTimeMillis() - currentTime)); 
+			}catch(Exception e){
+				// do nothing
+			}
+		}
+	}
 
-		long start = System.currentTimeMillis();
-		final long[] total = new long[1];
+	public void paintIt() {
+		final Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
+		
 		view.forEachElementDo(new ElementAction() {
 			@Override
 			public void action(Position position, Tixel tixel) {
-				long start = System.nanoTime();
-				tixel.renderAt$On(position, (Graphics2D) g);
-				long end = System.nanoTime();
-				total[0] += (end - start);
+				tixel.renderAt$On(position, g);
 			}
 		});
-		long end = System.currentTimeMillis();
-		System.out.println("total took " + (end - start) + " but stuff on inside took " + total[0] / 1000);
+
+		g.dispose();
+		strategy.show();
 	}
 }

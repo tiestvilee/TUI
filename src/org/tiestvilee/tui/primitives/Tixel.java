@@ -9,6 +9,9 @@ public class Tixel {
 	public final Colour back;
 
 	public Tixel(Glyph glyph, Colour fore, Colour back) {
+		if(glyph == null) {
+			throw new RuntimeException("no glyph supplied");
+		}
 		this.glyph = glyph;
 		this.fore = fore;
 		this.back = back;

@@ -1,10 +1,7 @@
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
-import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -76,15 +73,15 @@ public class TakeControlOfScreen {
 //		frame.setSize(640, 480);
 //		Window win = new Window(frame);
 //		win.add(canvas, BorderLayout.CENTER);
+
 		try {
 			// Enter full-screen mode
-			Window win = createEnclosingWindow(canvas, gs);
-			gs.setFullScreenWindow(win);
-			DisplayMode dm = new DisplayMode(640, 480, old.getBitDepth(), old.getRefreshRate());
-			gs.setDisplayMode(dm);
-			win.validate();
+//			gs.setFullScreenWindow(win);
+//			DisplayMode dm = new DisplayMode(640, 480, old.getBitDepth(), old.getRefreshRate());
+//			gs.setDisplayMode(dm);
+//			win.validate();
 			
-//			createEnclosingFrame(canvas);
+			createEnclosingFrame(canvas);
 			
 			canvas.showYourself();
 
@@ -123,10 +120,7 @@ public class TakeControlOfScreen {
 			int y = 0;
 			while( (line = reader.readLine()) != null && y < 60) {
 				for(int x=0; x<line.length(); x++) {
-					Glyph glyph = characterMap.get(new Character(line.charAt(x)));
-					if(glyph != null) {
-						view.setPosition$To(new Position(x, y), new Tixel(glyph, fore, back));
-					}
+					view.setPosition$To(new Position(x, y), new Tixel(characterMap.get(new Character(line.charAt(x))), fore, back));
 				}
 				y++;
 			}
@@ -137,28 +131,6 @@ public class TakeControlOfScreen {
 	}
 
 
-	private static Window createEnclosingWindow(AwtCanvas canvas, GraphicsDevice gs) {
-		
-		Frame frame = new Frame(gs.getDefaultConfiguration());
-		frame.setSize(640, 480);
-		Window win = new Window(frame);
-		win.add(canvas, BorderLayout.CENTER);
-
-		
-//		JFrame container = new JFrame("Space Invaders 101");
-//		
-//		JPanel panel = (JPanel) container.getContentPane();
-//		panel.setPreferredSize(new Dimension(640,480));
-//		panel.setLayout(null);
-//
-//		panel.add(canvas);
-//		
-//		container.pack();
-//		container.setResizable(false);
-//		container.setVisible(true);
-		
-		return win;
-	}
 
 	private static void createEnclosingFrame(AwtCanvas canvas) {
 		JFrame container = new JFrame("Space Invaders 101");
