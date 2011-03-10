@@ -9,7 +9,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,7 +30,50 @@ import org.tiestvilee.tui.view.ViewBuffer;
 
 public class TakeControlOfScreen {
 	
-	public static final boolean SET_DISPLAY_MODE = false;
+	public static class SomethingToDo implements Runnable {
+
+		private final ViewBuffer view;
+		private final Map<Character, Glyph> characterMap;
+
+		public SomethingToDo(ViewBuffer view, Map<Character, Glyph> characterMap) {
+			this.view = view;
+			this.characterMap = characterMap;
+		}
+
+		@Override
+		public void run() {
+			Tixel t0 = new Tixel(characterMap.get('X'), new ColourPair(new Colour(1.0f, Hue.BLUE), new Colour(0.0f, Hue.BLUE)));
+			Tixel t1 = new Tixel(characterMap.get('X'), new ColourPair(new Colour(0.5f, Hue.BLUE), new Colour(0.0f, Hue.BLUE)));
+			Random r = new Random();
+			
+			int[] depth = new int[50];
+			Arrays.fill(depth, -1);
+			
+			for(int i=0; i<1000; i++) {
+				
+				depth[r.nextInt(50)] = 1;
+				
+				for(int j=0; j<50; j++) {
+					if(depth[j] == -1) {
+						continue;
+					}
+					
+					depth[j]++;
+					view.setPosition$To(new Position(j, depth[j]), t0);
+					view.setPosition$To(new Position(j, depth[j]-1), t1);
+				}
+				try{
+					Thread.sleep(100);
+				} catch(Exception e) {
+					// ignore
+				}
+				
+			}
+		}
+
+	}
+
+	public static final boolean SET_DISPLAY_MODE = true;
 	
 	public static void main(String[] args) throws Exception {
 
@@ -44,12 +89,12 @@ public class TakeControlOfScreen {
 		final DisplayMode old = gs.getDisplayMode();
 
 		
-		Glyph emptyGlyph = new AwtEmptyGlyph(5,8); 
+		Glyph emptyGlyph = new AwtEmptyGlyph(GlyphToAlphabetMapper.WIDTH, GlyphToAlphabetMapper.HEIGHT); 
 		Tixel emptyTixel = new Tixel(emptyGlyph, new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
 
 		Map<Character, Glyph> characterMap = (new GlyphToAlphabetMapper()).loadMap(emptyGlyph);
 
-		ViewBuffer view = new ViewBuffer(new Rectangle(128, 60), emptyTixel);
+		ViewBuffer view = new ViewBuffer(new Rectangle(640/GlyphToAlphabetMapper.WIDTH, 480/GlyphToAlphabetMapper.HEIGHT), emptyTixel);
 		
 		writeFile$To$Using("exampleFile.txt", view, characterMap);
 
@@ -81,6 +126,8 @@ public class TakeControlOfScreen {
 			} else {
 				createEnclosingFrame(canvas);
 			}
+			
+			(new Thread(new SomethingToDo(view, characterMap))).start();
 			
 			canvas.showYourself();
 

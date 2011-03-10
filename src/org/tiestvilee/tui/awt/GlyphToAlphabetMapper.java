@@ -12,13 +12,16 @@ import org.tiestvilee.tui.primitives.Glyph;
 import org.tiestvilee.tui.primitives.Rectangle;
 
 public class GlyphToAlphabetMapper {
+	public final static int WIDTH = 6;
+	public final static int HEIGHT = 10;
+	
 	public Map<Character,Glyph> loadMap(Glyph emptyGlyph) {
 		Map<Character,Glyph> result = new HashMap<Character, Glyph>();
 		BufferedImage alphabet = getAlphabet();
 		
 		for(int i='!'; i<='~'; i++) {
-			int xOffset = 2+((i-'!')*5);
-			result.put(new Character((char)i), new AwtGlyph(alphabet, new Rectangle(xOffset, 5, 5, 8)));
+			int xOffset = 10+((i-'!')*WIDTH);
+			result.put(new Character((char)i), new AwtGlyph(alphabet, new Rectangle(xOffset, 7, WIDTH, HEIGHT)));
 		}
 		result.put(' ', emptyGlyph);
 		
@@ -27,7 +30,7 @@ public class GlyphToAlphabetMapper {
 	
 	private BufferedImage getAlphabet() {
 		try {
-			URL url = getClass().getClassLoader().getResource("org/tiestvilee/tui/awt/letters5x8-2,5.png");
+			URL url = getClass().getClassLoader().getResource("org/tiestvilee/tui/awt/letters6x10-10,7.png");
 			
 			return ImageIO.read(url);
 		} catch(IOException e) {
