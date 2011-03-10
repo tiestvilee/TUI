@@ -17,4 +17,26 @@ public class Colour {
 	public Color getColor() {
 		return color;
 	}
+
+	@Override
+	public int hashCode() {
+		return color.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Colour other = (Colour) obj;
+		if (color == null) {
+			if (other.color != null)
+				return false;
+		} else if (!color.equals(other.color))
+			return false;
+		return true;
+	}
 }

@@ -2,6 +2,9 @@ package org.tiestvilee.tui.view;
 
 import static junit.framework.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Rectangle;
@@ -103,6 +106,50 @@ public class ViewBufferTest {
 				}
 			}
 			
+		});
+	}
+	
+	@Test
+	public void shouldIterateThroughDirtyTixels() {
+		ViewBuffer view = new ViewBuffer(new Rectangle(100,100), emptyTixel);
+		view.setPosition$To(new Position(10,10), tixel);
+		view.setPosition$To(new Position(50,50), tixel);
+		view.setPosition$To(new Position(90,90), tixel);
+		view.setPosition$To(new Position(50,50), tixel);
+		
+		final List<Position> positions = new ArrayList<Position>();
+		
+		view.forEachDirtyElementDo(new ElementAction() {
+			@Override
+			public void action(Position position, Tixel tixel) {
+				positions.add(position);
+			}
+		});
+		
+		assertEquals(positions.size(), 3);
+		assertTrue(positions.contains(new Position(10,10)));
+		assertTrue(positions.contains(new Position(50,50)));
+		assertTrue(positions.contains(new Position(90,90)));
+	}
+	
+	@Test
+	public void shouldCleanAllDirtyTixels() {
+		ViewBuffer view = new ViewBuffer(new Rectangle(100,100), emptyTixel);
+		view.setPosition$To(new Position(10,10), tixel);
+		view.setPosition$To(new Position(50,50), tixel);
+		view.setPosition$To(new Position(90,90), tixel);
+		view.setPosition$To(new Position(50,50), tixel);
+		
+		view.forEachDirtyElementDo(new ElementAction() {
+			public void action(Position position, Tixel tixel) {
+			}
+		});
+		
+		view.forEachDirtyElementDo(new ElementAction() {
+			@Override
+			public void action(Position position, Tixel tixel) {
+				fail("shouldn't be anythig dirty");
+			}
 		});
 	}
 }

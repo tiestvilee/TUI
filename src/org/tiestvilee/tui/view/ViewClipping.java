@@ -41,5 +41,4 @@ public class ViewClipping extends View {
 			}
 		});
 	}
-
 }
