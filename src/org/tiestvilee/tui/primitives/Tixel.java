@@ -5,20 +5,15 @@ import java.awt.Graphics2D;
 public class Tixel {
 
 	public final Glyph glyph;
-	public final Colour fore;
-	public final Colour back;
+	public final ColourPair colourPair;
 
-	public Tixel(Glyph glyph, Colour fore, Colour back) {
-		if(glyph == null) {
-			throw new RuntimeException("no glyph supplied");
-		}
+	public Tixel(Glyph glyph, ColourPair colourPair) {
 		this.glyph = glyph;
-		this.fore = fore;
-		this.back = back;
+		this.colourPair = colourPair;
 	}
 
 	public void renderAt$On(Position position, Graphics2D g) {
-		glyph.renderAt$On(position, fore, back, g);
+		glyph.renderAt$WithColours$Onto(position, colourPair, g);
 	}
 
 }

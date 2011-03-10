@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 public class StubGlyph implements Glyph {
 
 	@Override
-	public void renderAt$On(Position position, Colour fore, Colour back, Graphics2D g) {
+	public void renderAt$WithColours$Onto(Position position, ColourPair colourPair, Graphics2D g) {
 	}
 
 }

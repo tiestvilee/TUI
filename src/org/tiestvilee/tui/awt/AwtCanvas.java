@@ -13,8 +13,9 @@ public class AwtCanvas extends Canvas {
 
 	private static final long serialVersionUID = -6713151784799490817L;
 
-	private final View view;
-
+	public final View view;
+	public boolean running = true;
+	
 	private BufferStrategy strategy;
 
 	public AwtCanvas(View view) {
@@ -28,7 +29,7 @@ public class AwtCanvas extends Canvas {
 		strategy = getBufferStrategy();
 		
 		long currentTime = System.currentTimeMillis();
-		while(true) {
+		while(running) {
 			paintIt();
 			try{
 				// 30 frames per second
@@ -42,12 +43,17 @@ public class AwtCanvas extends Canvas {
 	public void paintIt() {
 		final Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 		
+		long start = System.currentTimeMillis();
+		
 		view.forEachElementDo(new ElementAction() {
 			@Override
 			public void action(Position position, Tixel tixel) {
 				tixel.renderAt$On(position, g);
 			}
 		});
+		
+		long end = System.currentTimeMillis();
+		System.out.println("one frame took " + (end - start) );
 
 		g.dispose();
 		strategy.show();

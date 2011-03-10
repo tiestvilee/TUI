@@ -11,8 +11,8 @@ import org.tiestvilee.tui.view.ViewBuffer;
 
 public class ViewBufferTest {
 
-	static final Tixel tixel = new Tixel(null, null, null);
-	static final Tixel emptyTixel = new Tixel(null, null, null);
+	static final Tixel tixel = new Tixel(null, null);
+	static final Tixel emptyTixel = new Tixel(null, null);
 
 	@Test
 	public void shouldPlaceTixelAtPosition() {

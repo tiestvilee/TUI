@@ -2,7 +2,7 @@ package org.tiestvilee.tui.awt;
 
 import java.awt.Graphics2D;
 
-import org.tiestvilee.tui.primitives.Colour;
+import org.tiestvilee.tui.primitives.ColourPair;
 import org.tiestvilee.tui.primitives.Glyph;
 import org.tiestvilee.tui.primitives.Position;
 
@@ -17,8 +17,8 @@ public class AwtEmptyGlyph implements Glyph {
 	}
 
 	@Override
-	public void renderAt$On(Position position, Colour fore, Colour back, Graphics2D g) {
-		g.setColor(back.getColor());
+	public void renderAt$WithColours$Onto(Position position, ColourPair colourPair, Graphics2D g) {
+		g.setColor(colourPair.back.getColor());
 		g.fillRect(position.x * width, position.y * height, width, height);
 	}
 

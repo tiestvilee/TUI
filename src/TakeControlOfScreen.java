@@ -18,6 +18,7 @@ import org.tiestvilee.tui.awt.AwtCanvas;
 import org.tiestvilee.tui.awt.AwtEmptyGlyph;
 import org.tiestvilee.tui.awt.GlyphToAlphabetMapper;
 import org.tiestvilee.tui.primitives.Colour;
+import org.tiestvilee.tui.primitives.ColourPair;
 import org.tiestvilee.tui.primitives.Glyph;
 import org.tiestvilee.tui.primitives.Hue;
 import org.tiestvilee.tui.primitives.Position;
@@ -26,13 +27,10 @@ import org.tiestvilee.tui.primitives.Tixel;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 public class TakeControlOfScreen {
+	
+	public static final boolean SET_DISPLAY_MODE = false;
+	
 	public static void main(String[] args) throws Exception {
-
-		try {
-			Thread.sleep(2000);
-		} catch (Exception e) {
-
-		}
 
 		// Determine if full-screen mode is supported directly
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -47,66 +45,51 @@ public class TakeControlOfScreen {
 
 		
 		Glyph emptyGlyph = new AwtEmptyGlyph(5,8); 
-		Tixel emptyTixel = new Tixel(emptyGlyph, new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED));
+		Tixel emptyTixel = new Tixel(emptyGlyph, new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
 
-		Map<Character, Glyph> characterMap = (new GlyphToAlphabetMapper()).loadMap();
+		Map<Character, Glyph> characterMap = (new GlyphToAlphabetMapper()).loadMap(emptyGlyph);
 
 		ViewBuffer view = new ViewBuffer(new Rectangle(128, 60), emptyTixel);
 		
 		writeFile$To$Using("exampleFile.txt", view, characterMap);
 
-		final boolean[] byebye = new boolean[1];
-
 		// Create a button that leaves full-screen mode
-		AwtCanvas canvas = new AwtCanvas(view);
+		final AwtCanvas canvas = new AwtCanvas(view);
 		canvas.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				// Return to normal windowed mode
-				GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-				GraphicsDevice gs = ge.getDefaultScreenDevice();
-				gs.setDisplayMode(old);
-				gs.setFullScreenWindow(null);
-				byebye[0] = true;
+				if(SET_DISPLAY_MODE) {
+					GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+					GraphicsDevice gs = ge.getDefaultScreenDevice();
+					gs.setDisplayMode(old);
+					gs.setFullScreenWindow(null);
+				}
+				canvas.running = false;
+				System.out.println("Done!");
+				System.exit(0);
 			}
 		});
 
-		// Create a window for full-screen mode; add a button to leave
-		// full-screen mode
-//		Frame frame = new Frame(gs.getDefaultConfiguration());
-//		frame.setSize(640, 480);
-//		Window win = new Window(frame);
-//		win.add(canvas, BorderLayout.CENTER);
 		try {
-			// Enter full-screen mode
-			Window win = createEnclosingWindow(canvas, gs);
-			gs.setFullScreenWindow(win);
-			DisplayMode dm = new DisplayMode(640, 480, old.getBitDepth(), old.getRefreshRate());
-			gs.setDisplayMode(dm);
-			win.validate();
-			
-//			createEnclosingFrame(canvas);
+			if(SET_DISPLAY_MODE) {
+				// Enter full-screen mode
+				Window win = createEnclosingWindow(canvas, gs);
+				gs.setFullScreenWindow(win);
+				DisplayMode dm = new DisplayMode(640, 480, old.getBitDepth(), old.getRefreshRate());
+				gs.setDisplayMode(dm);
+				win.validate();
+			} else {
+				createEnclosingFrame(canvas);
+			}
 			
 			canvas.showYourself();
 
-			Thread.sleep(1000);
-			Tixel xTixel = new Tixel(characterMap.get(new Character('X')), new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED));
-			view.setPosition$To(new Position(6, 6), xTixel);
-			view.setPosition$To(new Position(0, 50), xTixel);
-
-			Thread.sleep(1000);
-			view.setPosition$To(new Position(16, 6), xTixel);
-			view.setPosition$To(new Position(40, 0), xTixel);
-
-			while (byebye[0] == false)
-				Thread.sleep(100);
-
-			// ...
 		} finally {
 			// Exit full-screen mode
-//			if (gs.isDisplayChangeSupported()) {
-//				gs.setDisplayMode(old);
-//				gs.setFullScreenWindow(null);
-//			}
+			if (gs.isDisplayChangeSupported()) {
+				gs.setDisplayMode(old);
+				gs.setFullScreenWindow(null);
+			}
 		}
 	}
 
@@ -118,6 +101,7 @@ public class TakeControlOfScreen {
 			
 			Colour fore = new Colour(1.0f, Hue.RED);
 			Colour back = new Colour(0.0f, Hue.RED);
+			ColourPair colourPair = new ColourPair(fore, back);
 			
 			String line;
 			int y = 0;
@@ -125,7 +109,7 @@ public class TakeControlOfScreen {
 				for(int x=0; x<line.length(); x++) {
 					Glyph glyph = characterMap.get(new Character(line.charAt(x)));
 					if(glyph != null) {
-						view.setPosition$To(new Position(x, y), new Tixel(glyph, fore, back));
+						view.setPosition$To(new Position(x, y), new Tixel(glyph, colourPair));
 					}
 				}
 				y++;
@@ -143,25 +127,12 @@ public class TakeControlOfScreen {
 		frame.setSize(640, 480);
 		Window win = new Window(frame);
 		win.add(canvas, BorderLayout.CENTER);
-
-		
-//		JFrame container = new JFrame("Space Invaders 101");
-//		
-//		JPanel panel = (JPanel) container.getContentPane();
-//		panel.setPreferredSize(new Dimension(640,480));
-//		panel.setLayout(null);
-//
-//		panel.add(canvas);
-//		
-//		container.pack();
-//		container.setResizable(false);
-//		container.setVisible(true);
 		
 		return win;
 	}
 
 	private static void createEnclosingFrame(AwtCanvas canvas) {
-		JFrame container = new JFrame("Space Invaders 101");
+		JFrame container = new JFrame("TUI");
 		
 		JPanel panel = (JPanel) container.getContentPane();
 		panel.setPreferredSize(new Dimension(640,480));

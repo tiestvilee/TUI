@@ -15,10 +15,10 @@ public class TixelTest {
 		Colour red = new Colour(96, Hue.RED);
 		Colour blue = new Colour(96, Hue.BLUE);
 		
-		Tixel tixel = new Tixel(glyph, red, blue);
+		Tixel tixel = new Tixel(glyph, new ColourPair(red, blue));
 		
 		assertEquals(tixel.glyph, glyph);
-		assertEquals(tixel.fore, red);
-		assertEquals(tixel.back, blue);
+		assertEquals(tixel.colourPair.fore, red);
+		assertEquals(tixel.colourPair.back, blue);
 	}
 }
