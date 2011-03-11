@@ -50,7 +50,7 @@ public class ViewManager implements Runnable {
             public void keyTyped(KeyEvent e) {
                 if(commandWidget.consume()) {
                     commandWidget.type(e.getKeyChar());
-                } else {
+                } else if(e.getKeyChar() != KeyEvent.VK_UNDEFINED) {
                     focusedView.type(e.getKeyChar());
                 }
             }

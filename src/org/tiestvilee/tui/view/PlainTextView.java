@@ -28,11 +28,16 @@ public class PlainTextView {
         }
     }
 
-    public void write$AtCursorAndProceed(char keyChar) {
-        Glyph glyph = characterMap.get(keyChar);
-        if(glyph != null) {
-            view.setPosition$To(cursor, new Tixel(glyph, colourPair));
-        }
+    public void write$AtCursorAndProceed(char c) {
+        setPosition$To(cursor, c);
         cursor = cursor.offsetBy(new Position(1,0));
+    }
+    
+    public Position getCursor() {
+        return cursor;
+    }
+    
+    public void setCursor(Position newPosition) {
+        cursor = newPosition;
     }
 }
