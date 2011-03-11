@@ -12,9 +12,6 @@ public class CommandWidget {
     }
 
     public void type(char c) {
-        if(spacePressed && c != ' ') {
-            command.append(c);
-        }
     }
 
     public String release(char c) {
@@ -22,7 +19,13 @@ public class CommandWidget {
             String result = command.toString();
             command.setLength(0);
             spacePressed = false;
-            return result;
+            if(result.length() > 0) {
+                return result;
+            }
+        } else {
+            if(spacePressed && c != ' ') {
+                command.append(c);
+            }
         }
         return null;
     }

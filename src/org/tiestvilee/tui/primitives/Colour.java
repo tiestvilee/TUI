@@ -11,7 +11,7 @@ public class Colour {
     public Colour(float intensity, Hue hue) {
         this.intensity = intensity;
         this.hue = hue;
-        color = Color.getHSBColor(hue.getAwtHue(), 1.0f, intensity);
+        color = Color.getHSBColor(hue.getAwtHue(), hue.getAwtSaturation(), intensity);
     }
 
     public Color getColor() {

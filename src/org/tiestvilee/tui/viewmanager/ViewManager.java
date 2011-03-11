@@ -5,7 +5,6 @@ import java.awt.event.KeyListener;
 import java.util.Map;
 
 import org.tiestvilee.tui.primitives.Glyph;
-import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 public class ViewManager implements Runnable {
@@ -20,6 +19,7 @@ public class ViewManager implements Runnable {
 
     public KeyListener getKeyListener() {
         final CommandWidget commandWidget = new CommandWidget();
+        final TextViewer focusedView = new TextViewer(view, characterMap);
         
         return new KeyListener() {
             
@@ -27,7 +27,7 @@ public class ViewManager implements Runnable {
             public void keyPressed(KeyEvent e) {
                 commandWidget.press(e.getKeyChar());
                 if( ! commandWidget.consume()) {
-                    System.out.print("pressed " + e.getKeyChar());
+                    focusedView.press(e.getKeyChar(), e.getKeyCode());
                 }
             }
             
@@ -36,12 +36,13 @@ public class ViewManager implements Runnable {
                 if(commandWidget.consume()) {
                     String command = commandWidget.release(e.getKeyChar());
                     if(command != null) {
-                        System.out.println("command " + command);
                         //exampleFile.txt
-                        new FileViewer().writeFile$To$Using(command, view.clipTo(new Rectangle(5,5,95,38)), characterMap);
+                        focusedView.writeFile$To$Using(command);
+                    } else {
+                        focusedView.type(' ');
                     }
                 } else {
-                    System.out.print("released " + e.getKeyChar());
+                    focusedView.release(e.getKeyChar(), e.getKeyCode());
                 }
             }
             
@@ -50,7 +51,7 @@ public class ViewManager implements Runnable {
                 if(commandWidget.consume()) {
                     commandWidget.type(e.getKeyChar());
                 } else {
-                    System.out.print("typed " + e.getKeyChar());
+                    focusedView.type(e.getKeyChar());
                 }
             }
         };

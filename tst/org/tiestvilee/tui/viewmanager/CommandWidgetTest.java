@@ -13,12 +13,26 @@ public class CommandWidgetTest {
         
         // when
         commandWidget.press(' ');
-        commandWidget.type('a');
-        commandWidget.type('b');
+        commandWidget.type(' ');
+        pressTypeRelease(commandWidget, 'a');
+        pressTypeRelease(commandWidget, 'b');
         String command = commandWidget.release(' ');
         
         // then
         assertEquals(command, "ab");
+    }
+
+    @Test
+    public void shouldReturnNullWhenEmptyCommand() {
+        CommandWidget commandWidget = new CommandWidget();
+        
+        // when
+        commandWidget.press(' ');
+        commandWidget.type(' ');
+        String command = commandWidget.release(' ');
+        
+        // then
+        assertEquals(command, null);
     }
     
     @Test
@@ -35,7 +49,7 @@ public class CommandWidgetTest {
     }
 
     @Test
-    public void shouldReturnStringWhenSpaceReleased() {
+    public void shouldReturnStringOnlyWhenSpaceReleased() {
         CommandWidget commandWidget = new CommandWidget();
         
         // when
@@ -53,11 +67,12 @@ public class CommandWidgetTest {
         
         // when
         commandWidget.press(' ');
-        commandWidget.type('a');
+        commandWidget.type(' ');
+        pressTypeRelease(commandWidget, 'a');
         commandWidget.release(' ');
         
         commandWidget.press(' ');
-        commandWidget.type('b');
+        pressTypeRelease(commandWidget, 'b');
         String command = commandWidget.release(' ');
         
         // then
@@ -86,12 +101,54 @@ public class CommandWidgetTest {
         
         // when
         commandWidget.press(' ');
-        commandWidget.type('a');
         commandWidget.type(' ');
-        commandWidget.type('b');
+        commandWidget.press(' ');
+        pressTypeRelease(commandWidget, 'a');
+        commandWidget.type(' ');
+        pressTypeRelease(commandWidget, 'b');
         String command = commandWidget.release(' ');
         
         // then
         assertEquals(command, "ab");
     }
+
+    @Test
+    public void shouldIgnoreInterleavedChars() {
+        CommandWidget commandWidget = new CommandWidget();
+        
+        // when
+        commandWidget.press(' ');
+        commandWidget.type(' ');
+        commandWidget.press('a');
+        commandWidget.type('a');
+        String command = commandWidget.release(' ');
+        commandWidget.release('a');
+        
+        // then
+        assertEquals(command, null);
+    }
+
+    @Test
+    public void stupidTestCase() {
+        CommandWidget commandWidget = new CommandWidget();
+        
+        // when
+        commandWidget.press(' ');
+        commandWidget.type(' ');
+        commandWidget.release(' ');
+        pressTypeRelease(commandWidget, 'a');
+        commandWidget.press(' ');
+        commandWidget.type(' ');
+        String command = commandWidget.release(' ');
+        
+        // then
+        assertEquals(command, null);
+    }
+    
+    private void pressTypeRelease(CommandWidget commandWidget, char c) {
+        commandWidget.press(c);
+        commandWidget.type(c);
+        commandWidget.release(c);
+    }
+
 }

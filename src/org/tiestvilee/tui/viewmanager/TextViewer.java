@@ -12,23 +12,28 @@ import org.tiestvilee.tui.primitives.Hue;
 import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.view.PlainTextView;
 import org.tiestvilee.tui.view.View;
+import org.tiestvilee.tui.view.ViewBuffer;
 
-public class FileViewer {
+public class TextViewer {
 
-    public FileViewer() {
+    private final ViewBuffer view;
+    private final Map<Character, Glyph> characterMap;
+    private PlainTextView textView;
+
+    public TextViewer(ViewBuffer view, Map<Character, Glyph> characterMap) {
+        this.view = view;
+        this.characterMap = characterMap;
         
+        Colour fore = new Colour(1.0f, Hue.WHITE);
+        Colour back = new Colour(0.0f, Hue.BLACK);
+        ColourPair colourPair = new ColourPair(fore, back);
+        textView = new PlainTextView(view, characterMap, colourPair);
     }
     
-    public void writeFile$To$Using(String fileName, View view, Map<Character, Glyph> characterMap) {
+    public void writeFile$To$Using(String fileName) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader((new Tui()).getClass().getClassLoader()
                 .getResourceAsStream(fileName)));
-
-            Colour fore = new Colour(1.0f, Hue.BLUE);
-            Colour back = new Colour(1.0f, Hue.RED);
-            ColourPair colourPair = new ColourPair(fore, back);
-            
-            PlainTextView textView = new PlainTextView(view, characterMap, colourPair);
 
             String line;
             int y = 0;
@@ -42,5 +47,19 @@ public class FileViewer {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void type(char keyChar) {
+        textView.write$AtCursorAndProceed(keyChar);
+    }
+
+    public void release(char keyChar, int keyCode) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void press(char keyChar, int keyCode) {
+        // TODO Auto-generated method stub
+        
     }
 }
