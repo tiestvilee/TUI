@@ -1,8 +1,6 @@
 package org.tiestvilee.tui.view;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
@@ -25,11 +23,11 @@ public class PositionSet {
 		}
 	}
 	
-	public List<Position> getPositionsAndClearThem() {
-		List<Position> result;
+	public Set<Position> getPositionsAndClearThem() {
+		Set<Position> result;
 		try {
 			acquireDirtLock();
-			result = new ArrayList<Position>(dirt);
+			result = new HashSet<Position>(dirt);
 			dirt.clear();
 		} catch (InterruptedException e) {
 			throw new RuntimeException("interrupted!", e);

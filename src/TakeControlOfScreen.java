@@ -26,6 +26,7 @@ import org.tiestvilee.tui.primitives.Hue;
 import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.primitives.Tixel;
+import org.tiestvilee.tui.view.View.ElementAction;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 public class TakeControlOfScreen {
@@ -85,7 +86,8 @@ public class TakeControlOfScreen {
 				createEnclosingFrame(canvas);
 			}
 			
-			(new Thread(new SomethingToDo(view, characterMap))).start();
+			//(new Thread(new MatrixExample(view, characterMap))).start();
+			(new Thread(new ScrollExample(view, emptyTixel))).start();
 			
 			canvas.showYourself();
 
@@ -150,12 +152,12 @@ public class TakeControlOfScreen {
 		container.setVisible(true);
 	}
 	
-	public static class SomethingToDo implements Runnable {
+	public static class MatrixExample implements Runnable {
 
 		private final ViewBuffer view;
 		private final Map<Character, Glyph> characterMap;
 
-		public SomethingToDo(ViewBuffer view, Map<Character, Glyph> characterMap) {
+		public MatrixExample(ViewBuffer view, Map<Character, Glyph> characterMap) {
 			this.view = view;
 			this.characterMap = characterMap;
 		}
@@ -191,6 +193,76 @@ public class TakeControlOfScreen {
 			}
 		}
 
+
 	}
 
+	public static class ScrollExample implements Runnable {
+
+		private final ViewBuffer view;
+		private final Tixel empty;
+
+		public ScrollExample(ViewBuffer view, Tixel empty) {
+			this.view = view;
+			this.empty = empty;
+		}
+
+		@Override
+		public void run() {
+			ViewBuffer copy = copyOriginalScreen();
+			
+			while(true) {
+				copy.offsetBy(new Position(0,2)).forEachElementDo(new ElementAction() {
+					@Override
+					public void action(Position position, Tixel tixel) {
+						view.setPosition$To(position, tixel);
+					}
+				});
+				sleep();
+				copy.forEachElementDo(new ElementAction() {
+					@Override
+					public void action(Position position, Tixel tixel) {
+						view.setPosition$To(position, tixel);
+					}
+				});
+				sleep();
+				copy.offsetBy(new Position(0,-2)).forEachElementDo(new ElementAction() {
+					@Override
+					public void action(Position position, Tixel tixel) {
+						view.setPosition$To(position, tixel);
+					}
+				});
+				sleep();
+				copy.forEachElementDo(new ElementAction() {
+					@Override
+					public void action(Position position, Tixel tixel) {
+						view.setPosition$To(position, tixel);
+					}
+				});
+				sleep();
+			}
+		}
+
+		private void sleep() {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		private ViewBuffer copyOriginalScreen() {
+			final ViewBuffer copy = new ViewBuffer(view.clipRect, empty);
+			
+			view.forEachElementDo(new ElementAction() {
+				@Override
+				public void action(Position position, Tixel tixel) {
+					copy.setPosition$To(position, tixel);
+				}
+			});
+			
+			return copy;
+		}
+		
+	}
 }

@@ -4,7 +4,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 
-import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 import org.tiestvilee.tui.primitives.Position;
@@ -117,7 +117,7 @@ public class ViewBufferTest {
 		view.setPosition$To(new Position(90,90), tixel);
 		view.setPosition$To(new Position(50,50), tixel);
 		
-		List<Position> dirtyElements = view.getDirtyElementsAndClearThem();
+		Set<Position> dirtyElements = view.getDirtyElementsAndClearThem();
 		
 		assertEquals(dirtyElements.size(), 3);
 		assertTrue(dirtyElements.contains(new Position(10,10)));
@@ -126,5 +126,17 @@ public class ViewBufferTest {
 		
 		dirtyElements = view.getDirtyElementsAndClearThem();
 		assertEquals(dirtyElements.size(), 0);
+	}
+	
+	@Test
+	public void shouldNotUpdateDirtIfWritingSameThingToView() {
+		ViewBuffer view = new ViewBuffer(new Rectangle(100,100), emptyTixel);
+		view.setPosition$To(new Position(10,10), tixel);
+		
+		view.getDirtyElementsAndClearThem();
+		
+		view.setPosition$To(new Position(10,10), tixel);
+
+		assertEquals(view.getDirtyElementsAndClearThem().size(), 0);
 	}
 }

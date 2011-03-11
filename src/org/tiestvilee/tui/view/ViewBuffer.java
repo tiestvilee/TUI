@@ -1,6 +1,6 @@
 package org.tiestvilee.tui.view;
 
-import java.util.List;
+import java.util.Set;
 
 import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Rectangle;
@@ -8,8 +8,9 @@ import org.tiestvilee.tui.primitives.Tixel;
 
 public class ViewBuffer extends View {
 
+	public final Rectangle clipRect;
+	
 	private final Tixel[][] screen;
-	private final Rectangle clipRect;
 	private final PositionSet dirtyPositions = new PositionSet();
 
 	public ViewBuffer(Rectangle clipRect, final Tixel emptyTixel) {
@@ -26,8 +27,12 @@ public class ViewBuffer extends View {
 
 	public void setPosition$To(Position position, Tixel tixel) {
 		if (clipRect.contains(position)) {
-			screen[position.x - clipRect.x][position.y - clipRect.y] = tixel;
-			dirtyPositions.putPosition(position);
+			int x = position.x - clipRect.x;
+			int y = position.y - clipRect.y;
+			if(screen[x][y] != tixel) {
+				screen[x][y] = tixel;
+				dirtyPositions.putPosition(position);
+			}
 		}
 	}
 
@@ -46,7 +51,7 @@ public class ViewBuffer extends View {
 		}
 	}
 	
-	public List<Position> getDirtyElementsAndClearThem() {
+	public Set<Position> getDirtyElementsAndClearThem() {
 		return dirtyPositions.getPositionsAndClearThem();
 	}
 

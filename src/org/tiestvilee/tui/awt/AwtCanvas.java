@@ -4,6 +4,8 @@ import java.awt.Canvas;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Tixel;
@@ -19,6 +21,7 @@ public class AwtCanvas extends Canvas {
 	public boolean running = true;
 	
 	private BufferStrategy strategy;
+	private Set<Position> oldDirtyElements = new HashSet<Position>();
 
 	public AwtCanvas(ViewBuffer view) {
 		this.view = view;
@@ -29,16 +32,20 @@ public class AwtCanvas extends Canvas {
 	public void showYourself() {
 		setUpBufferStrategy();
 		paintWholeScreen();
+		paintWholeScreen();
 		
 		long currentTime = System.currentTimeMillis();
 		while(running) {
-			paintChangesSinceLastFrame(view.getDirtyElementsAndClearThem());
+			Set<Position> dirtyElements = view.getDirtyElementsAndClearThem();
+			oldDirtyElements.addAll(dirtyElements);
+			paintChangesSinceLastFrame(oldDirtyElements);
+			oldDirtyElements  = dirtyElements;
 			ensure30FramesASecond(currentTime);
 		}
 	}
 
 	private void setUpBufferStrategy() {
-		createBufferStrategy(1); 
+		createBufferStrategy(2); 
 		strategy = getBufferStrategy();
 	}
 
@@ -65,7 +72,12 @@ public class AwtCanvas extends Canvas {
 	}
 
 	public void paintChangesSinceLastFrame(Collection<Position> dirtyElements) {
-		final Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
+		drawScreenToBuffer(dirtyElements, strategy);
+		strategy.show();
+	}
+
+	private void drawScreenToBuffer(Collection<Position> dirtyElements, BufferStrategy strategy2) {
+		final Graphics2D g = (Graphics2D) strategy2.getDrawGraphics();
 		
 		long start;
 		if(VERBOSE) {
@@ -86,6 +98,5 @@ public class AwtCanvas extends Canvas {
 		}
 
 		g.dispose();
-		strategy.show();
 	}
 }
