@@ -2,6 +2,7 @@ package org.tiestvilee.tui.view;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.tiestvilee.tui.primitives.Position;
@@ -49,14 +50,14 @@ public class ViewBuffer extends View {
 			}
 		}
 	}
-
-	public void forEachDirtyElementDo(ElementAction elementAction) {
-		synchronized (dirt) {
-			for(Position position : new ArrayList<Position>(dirt)) {
-				elementAction.action(position, getTixelAt(position));
-			}
+	
+	public List<Position> getDirtyElementsAndClearThem() {
+		List<Position> result;
+		synchronized(dirt) {
+			result = new ArrayList<Position>(dirt);
 			dirt.clear();
 		}
+		return result;
 	}
 
 }

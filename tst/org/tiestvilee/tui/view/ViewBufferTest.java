@@ -1,8 +1,9 @@
 package org.tiestvilee.tui.view;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -10,7 +11,6 @@ import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.primitives.Tixel;
 import org.tiestvilee.tui.view.View.ElementAction;
-import org.tiestvilee.tui.view.ViewBuffer;
 
 public class ViewBufferTest {
 
@@ -110,46 +110,21 @@ public class ViewBufferTest {
 	}
 	
 	@Test
-	public void shouldIterateThroughDirtyTixels() {
+	public void shouldReturnListOfAllDirtyTixelAndClearDirtyTixels() {
 		ViewBuffer view = new ViewBuffer(new Rectangle(100,100), emptyTixel);
 		view.setPosition$To(new Position(10,10), tixel);
 		view.setPosition$To(new Position(50,50), tixel);
 		view.setPosition$To(new Position(90,90), tixel);
 		view.setPosition$To(new Position(50,50), tixel);
 		
-		final List<Position> positions = new ArrayList<Position>();
+		List<Position> dirtyElements = view.getDirtyElementsAndClearThem();
 		
-		view.forEachDirtyElementDo(new ElementAction() {
-			@Override
-			public void action(Position position, Tixel tixel) {
-				positions.add(position);
-			}
-		});
+		assertEquals(dirtyElements.size(), 3);
+		assertTrue(dirtyElements.contains(new Position(10,10)));
+		assertTrue(dirtyElements.contains(new Position(50,50)));
+		assertTrue(dirtyElements.contains(new Position(90,90)));
 		
-		assertEquals(positions.size(), 3);
-		assertTrue(positions.contains(new Position(10,10)));
-		assertTrue(positions.contains(new Position(50,50)));
-		assertTrue(positions.contains(new Position(90,90)));
-	}
-	
-	@Test
-	public void shouldCleanAllDirtyTixels() {
-		ViewBuffer view = new ViewBuffer(new Rectangle(100,100), emptyTixel);
-		view.setPosition$To(new Position(10,10), tixel);
-		view.setPosition$To(new Position(50,50), tixel);
-		view.setPosition$To(new Position(90,90), tixel);
-		view.setPosition$To(new Position(50,50), tixel);
-		
-		view.forEachDirtyElementDo(new ElementAction() {
-			public void action(Position position, Tixel tixel) {
-			}
-		});
-		
-		view.forEachDirtyElementDo(new ElementAction() {
-			@Override
-			public void action(Position position, Tixel tixel) {
-				fail("shouldn't be anythig dirty");
-			}
-		});
+		dirtyElements = view.getDirtyElementsAndClearThem();
+		assertEquals(dirtyElements.size(), 0);
 	}
 }

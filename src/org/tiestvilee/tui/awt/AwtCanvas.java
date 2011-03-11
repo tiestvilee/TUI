@@ -3,6 +3,7 @@ package org.tiestvilee.tui.awt;
 import java.awt.Canvas;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
+import java.util.Collection;
 
 import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Tixel;
@@ -12,6 +13,7 @@ import org.tiestvilee.tui.view.ViewBuffer;
 public class AwtCanvas extends Canvas {
 
 	private static final long serialVersionUID = -6713151784799490817L;
+	private static final boolean VERBOSE = false;
 
 	public final ViewBuffer view;
 	public boolean running = true;
@@ -25,20 +27,26 @@ public class AwtCanvas extends Canvas {
 	}
 
 	public void showYourself() {
-		createBufferStrategy(2);
-		strategy = getBufferStrategy();
-		
+		setUpBufferStrategy();
 		paintWholeScreen();
 		
 		long currentTime = System.currentTimeMillis();
 		while(running) {
-			paintIt();
-			try{
-				// 30 frames per second
-				Thread.sleep((1000/30) - (System.currentTimeMillis() - currentTime)); 
-			}catch(Exception e){
-				// do nothing
-			}
+			paintChangesSinceLastFrame(view.getDirtyElementsAndClearThem());
+			ensure30FramesASecond(currentTime);
+		}
+	}
+
+	private void setUpBufferStrategy() {
+		createBufferStrategy(1); 
+		strategy = getBufferStrategy();
+	}
+
+	private void ensure30FramesASecond(long currentTime) {
+		try{
+			Thread.sleep((1000/30) - (System.currentTimeMillis() - currentTime)); 
+		}catch(Exception e){
+			// do nothing
 		}
 	}
 
@@ -56,20 +64,26 @@ public class AwtCanvas extends Canvas {
 		strategy.show();
 	}
 
-	public void paintIt() {
+	public void paintChangesSinceLastFrame(Collection<Position> dirtyElements) {
 		final Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 		
-		long start = System.currentTimeMillis();
+		long start;
+		if(VERBOSE) {
+			start = System.currentTimeMillis();
+		}
 		
-		view.forEachDirtyElementDo(new ElementAction() {
-			@Override
-			public void action(Position position, Tixel tixel) {
-				tixel.renderAt$On(position, g);
+		for(Position position : dirtyElements) {
+			view.getTixelAt(position).renderAt$On(position, g);
+		}
+		
+		if(VERBOSE) {
+			long end = System.currentTimeMillis();
+			if((end-start) == 0) {
+				System.out.print('.');
+			} else {
+				System.out.println("one frame took " + (end - start) );
 			}
-		});
-		
-		long end = System.currentTimeMillis();
-		System.out.println("one frame took " + (end - start) );
+		}
 
 		g.dispose();
 		strategy.show();
