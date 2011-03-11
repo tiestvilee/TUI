@@ -4,16 +4,16 @@ import java.awt.Graphics2D;
 
 public class Tixel {
 
-	public final Glyph glyph;
-	public final ColourPair colourPair;
+    public final Glyph glyph;
+    public final ColourPair colourPair;
 
-	public Tixel(Glyph glyph, ColourPair colourPair) {
-		this.glyph = glyph;
-		this.colourPair = colourPair;
-	}
+    public Tixel(Glyph glyph, ColourPair colourPair) {
+        this.glyph = glyph;
+        this.colourPair = colourPair;
+    }
 
-	public void renderAt$On(Position position, Graphics2D g) {
-		glyph.renderAt$WithColours$Onto(position, colourPair, g);
-	}
+    public void renderAt$On(Position position, Graphics2D g) {
+        glyph.renderAt$WithColours$Onto(position, colourPair, g);
+    }
 
 }

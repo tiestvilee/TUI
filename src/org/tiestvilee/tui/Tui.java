@@ -1,3 +1,5 @@
+package org.tiestvilee.tui;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
@@ -7,8 +9,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
@@ -28,8 +28,9 @@ import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.primitives.Tixel;
 import org.tiestvilee.tui.view.View.ElementAction;
 import org.tiestvilee.tui.view.ViewBuffer;
+import org.tiestvilee.tui.viewmanager.ViewManager;
 
-public class TakeControlOfScreen {
+public class Tui {
 
     public static final boolean SET_DISPLAY_MODE = false;
 
@@ -46,15 +47,10 @@ public class TakeControlOfScreen {
 
         final DisplayMode old = gs.getDisplayMode();
 
-        Glyph emptyGlyph = new AwtEmptyGlyph(GlyphToAlphabetMapper.WIDTH, GlyphToAlphabetMapper.HEIGHT);
-        Tixel emptyTixel = new Tixel(emptyGlyph, new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
-
-        Map<Character, Glyph> characterMap = (new GlyphToAlphabetMapper()).loadMap(emptyGlyph);
-
+        Map<Character, Glyph> characterMap = loadCharacterMap();
         ViewBuffer view = new ViewBuffer(new Rectangle(640 / GlyphToAlphabetMapper.WIDTH, 480 / GlyphToAlphabetMapper.HEIGHT),
-            emptyTixel);
-
-        writeFile$To$Using("exampleFile.txt", view, characterMap);
+            getEmptyTixel(characterMap));
+        ViewManager manager = new ViewManager(view, characterMap);
 
         // Create a button that leaves full-screen mode
         final AwtCanvas canvas = new AwtCanvas(view);
@@ -72,6 +68,7 @@ public class TakeControlOfScreen {
                 System.exit(0);
             }
         });
+        canvas.addKeyListener(manager.getKeyListener());
 
         try {
             if (SET_DISPLAY_MODE) {
@@ -86,7 +83,7 @@ public class TakeControlOfScreen {
             }
 
             // (new Thread(new MatrixExample(view, characterMap))).start();
-            (new Thread(new ScrollExample(view, emptyTixel))).start();
+            (new Thread(manager)).start();
 
             canvas.showYourself();
 
@@ -99,30 +96,15 @@ public class TakeControlOfScreen {
         }
     }
 
-    private static void writeFile$To$Using(String fileName, ViewBuffer view, Map<Character, Glyph> characterMap) {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader((new TakeControlOfScreen()).getClass()
-                .getClassLoader().getResourceAsStream(fileName)));
+    private static Tixel getEmptyTixel(Map<Character, Glyph> characterMap) {
+        Tixel emptyTixel = new Tixel(characterMap.get(' '), new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
+        return emptyTixel;
+    }
 
-            Colour fore = new Colour(1.0f, Hue.RED);
-            Colour back = new Colour(0.0f, Hue.RED);
-            ColourPair colourPair = new ColourPair(fore, back);
-
-            String line;
-            int y = 0;
-            while ((line = reader.readLine()) != null && y < 60) {
-                for (int x = 0; x < line.length(); x++) {
-                    Glyph glyph = characterMap.get(new Character(line.charAt(x)));
-                    if (glyph != null) {
-                        view.setPosition$To(new Position(x, y), new Tixel(glyph, colourPair));
-                    }
-                }
-                y++;
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private static Map<Character, Glyph> loadCharacterMap() {
+        Glyph emptyGlyph = new AwtEmptyGlyph(GlyphToAlphabetMapper.WIDTH, GlyphToAlphabetMapper.HEIGHT);
+        Map<Character, Glyph> characterMap = (new GlyphToAlphabetMapper()).loadMap(emptyGlyph);
+        return characterMap;
     }
 
     private static Window createEnclosingWindow(AwtCanvas canvas, GraphicsDevice gs) {
