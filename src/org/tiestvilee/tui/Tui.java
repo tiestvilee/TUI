@@ -68,20 +68,22 @@ public class Tui {
                 System.exit(0);
             }
         });
-        canvas.addKeyListener(manager.getKeyListener());
+        
 
         try {
+            Window win;
             if (SET_DISPLAY_MODE) {
                 // Enter full-screen mode
-                Window win = createEnclosingWindow(canvas, gs);
+                win = createEnclosingWindow(canvas, gs);
                 gs.setFullScreenWindow(win);
                 DisplayMode dm = new DisplayMode(640, 480, old.getBitDepth(), old.getRefreshRate());
                 gs.setDisplayMode(dm);
                 win.validate();
             } else {
-                createEnclosingFrame(canvas);
+                win = createEnclosingFrame(canvas);
             }
 
+            win.addKeyListener(manager.getKeyListener());
             // (new Thread(new MatrixExample(view, characterMap))).start();
             (new Thread(manager)).start();
 
@@ -117,7 +119,7 @@ public class Tui {
         return win;
     }
 
-    private static void createEnclosingFrame(AwtCanvas canvas) {
+    private static Window createEnclosingFrame(AwtCanvas canvas) {
         JFrame container = new JFrame("TUI");
 
         JPanel panel = (JPanel) container.getContentPane();
@@ -129,6 +131,8 @@ public class Tui {
         container.pack();
         container.setResizable(false);
         container.setVisible(true);
+        
+        return Window.getWindows()[0];
     }
 
     public static class MatrixExample implements Runnable {

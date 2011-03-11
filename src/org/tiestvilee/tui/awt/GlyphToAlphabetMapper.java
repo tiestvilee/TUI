@@ -21,7 +21,7 @@ public class GlyphToAlphabetMapper {
 
         for (int i = '!'; i <= '~'; i++) {
             int xOffset = 10 + ((i - '!') * WIDTH);
-            result.put(new Character((char) i), new AwtGlyph(alphabet, new Rectangle(xOffset, 7, WIDTH, HEIGHT)));
+            result.put(new Character((char) i), new AwtGlyph(alphabet, new Rectangle(xOffset, 8, WIDTH, HEIGHT)));
         }
         result.put(' ', emptyGlyph);
 

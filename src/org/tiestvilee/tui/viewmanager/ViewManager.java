@@ -1,18 +1,11 @@
 package org.tiestvilee.tui.viewmanager;
 
-import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Map;
 
-import org.tiestvilee.tui.Tui;
-import org.tiestvilee.tui.primitives.Colour;
-import org.tiestvilee.tui.primitives.ColourPair;
 import org.tiestvilee.tui.primitives.Glyph;
-import org.tiestvilee.tui.primitives.Hue;
-import org.tiestvilee.tui.primitives.Position;
-import org.tiestvilee.tui.primitives.Tixel;
+import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 public class ViewManager implements Runnable {
@@ -26,39 +19,45 @@ public class ViewManager implements Runnable {
     }
 
     public KeyListener getKeyListener() {
-        return new KeyAdapter() {
+        final CommandWidget commandWidget = new CommandWidget();
+        
+        return new KeyListener() {
+            
+            @Override
+            public void keyPressed(KeyEvent e) {
+                commandWidget.press(e.getKeyChar());
+                if( ! commandWidget.consume()) {
+                    System.out.print("pressed " + e.getKeyChar());
+                }
+            }
+            
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(commandWidget.consume()) {
+                    String command = commandWidget.release(e.getKeyChar());
+                    if(command != null) {
+                        System.out.println("command " + command);
+                        //exampleFile.txt
+                        new FileViewer().writeFile$To$Using(command, view.clipTo(new Rectangle(5,5,95,38)), characterMap);
+                    }
+                } else {
+                    System.out.print("released " + e.getKeyChar());
+                }
+            }
+            
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if(commandWidget.consume()) {
+                    commandWidget.type(e.getKeyChar());
+                } else {
+                    System.out.print("typed " + e.getKeyChar());
+                }
+            }
         };
     }
 
     @Override
     public void run() {
-        writeFile$To$Using("exampleFile.txt", view, characterMap);
-
     }
 
-    private static void writeFile$To$Using(String fileName, ViewBuffer view, Map<Character, Glyph> characterMap) {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader((new Tui()).getClass().getClassLoader()
-                .getResourceAsStream(fileName)));
-
-            Colour fore = new Colour(1.0f, Hue.RED);
-            Colour back = new Colour(0.0f, Hue.RED);
-            ColourPair colourPair = new ColourPair(fore, back);
-
-            String line;
-            int y = 0;
-            while ((line = reader.readLine()) != null && y < 60) {
-                for (int x = 0; x < line.length(); x++) {
-                    Glyph glyph = characterMap.get(new Character(line.charAt(x)));
-                    if (glyph != null) {
-                        view.setPosition$To(new Position(x, y), new Tixel(glyph, colourPair));
-                    }
-                }
-                y++;
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
