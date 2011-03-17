@@ -52,7 +52,9 @@ public class Tui {
             getEmptyTixel(characterMap));
         ViewManager manager = new ViewManager(view, characterMap);
 
-        // Create a button that leaves full-screen mode
+
+		view.setPosition$To(new Position(5,5), new Tixel(characterMap.get('X'), new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED))));
+
         final AwtCanvas canvas = new AwtCanvas(view);
         canvas.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
@@ -71,20 +73,14 @@ public class Tui {
         
 
         try {
-            Window win;
+            JFrame win;
             if (SET_DISPLAY_MODE) {
-                // Enter full-screen mode
-                win = createEnclosingWindow(canvas, gs);
-                gs.setFullScreenWindow(win);
-                DisplayMode dm = new DisplayMode(640, 480, old.getBitDepth(), old.getRefreshRate());
-                gs.setDisplayMode(dm);
-                win.validate();
+				win = enterFullScreenMode(gs, old, canvas);
             } else {
                 win = createEnclosingFrame(canvas);
             }
 
             win.addKeyListener(manager.getKeyListener());
-            // (new Thread(new MatrixExample(view, characterMap))).start();
             (new Thread(manager)).start();
 
             canvas.showYourself();
@@ -98,9 +94,20 @@ public class Tui {
         }
     }
 
-    private static Tixel getEmptyTixel(Map<Character, Glyph> characterMap) {
-        Tixel emptyTixel = new Tixel(characterMap.get(' '), new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
-        return emptyTixel;
+	private static JFrame enterFullScreenMode(GraphicsDevice gs, DisplayMode old, AwtCanvas canvas) {
+		JFrame frame = createEnclosingWindow(canvas, gs);
+
+		gs.setFullScreenWindow(frame);
+		DisplayMode dm = new DisplayMode(640, 480, old.getBitDepth(), old.getRefreshRate());
+		gs.setDisplayMode(dm);
+
+		frame.validate();
+		frame.setFocusable(true);
+		return frame;
+	}
+
+	private static Tixel getEmptyTixel(Map<Character, Glyph> characterMap) {
+        return new Tixel(characterMap.get(' '), new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
     }
 
     private static Map<Character, Glyph> loadCharacterMap() {
@@ -109,17 +116,20 @@ public class Tui {
         return characterMap;
     }
 
-    private static Window createEnclosingWindow(AwtCanvas canvas, GraphicsDevice gs) {
+    private static JFrame createEnclosingWindow(AwtCanvas canvas, GraphicsDevice gs) {
+        JFrame frame = new JFrame(gs.getDefaultConfiguration());
 
-        Frame frame = new Frame(gs.getDefaultConfiguration());
         frame.setSize(640, 480);
-        Window win = new Window(frame);
-        win.add(canvas, BorderLayout.CENTER);
+		frame.add(canvas, BorderLayout.CENTER);
+		frame.setAlwaysOnTop(true);
+		frame.setUndecorated(true);
+		frame.setFocusableWindowState(true);
 
-        return win;
+        return frame;
     }
 
-    private static Window createEnclosingFrame(AwtCanvas canvas) {
+	// the following should be the same as the preceeding
+    private static JFrame createEnclosingFrame(AwtCanvas canvas) {
         JFrame container = new JFrame("TUI");
 
         JPanel panel = (JPanel) container.getContentPane();
@@ -132,119 +142,6 @@ public class Tui {
         container.setResizable(false);
         container.setVisible(true);
         
-        return Window.getWindows()[0];
-    }
-
-    public static class MatrixExample implements Runnable {
-
-        private final ViewBuffer view;
-        private final Map<Character, Glyph> characterMap;
-
-        public MatrixExample(ViewBuffer view, Map<Character, Glyph> characterMap) {
-            this.view = view;
-            this.characterMap = characterMap;
-        }
-
-        @Override
-        public void run() {
-            Tixel t0 = new Tixel(characterMap.get('X'), new ColourPair(new Colour(1.0f, Hue.BLUE), new Colour(0.0f, Hue.BLUE)));
-            Tixel t1 = new Tixel(characterMap.get('X'), new ColourPair(new Colour(0.5f, Hue.BLUE), new Colour(0.0f, Hue.BLUE)));
-            Random r = new Random();
-
-            int[] depth = new int[50];
-            Arrays.fill(depth, -1);
-
-            for (int i = 0; i < 1000; i++) {
-
-                depth[r.nextInt(50)] = 1;
-
-                for (int j = 0; j < 50; j++) {
-                    if (depth[j] == -1) {
-                        continue;
-                    }
-
-                    depth[j]++;
-                    view.setPosition$To(new Position(j, depth[j]), t0);
-                    view.setPosition$To(new Position(j, depth[j] - 1), t1);
-                }
-                try {
-                    Thread.sleep(100);
-                } catch (Exception e) {
-                    // ignore
-                }
-
-            }
-        }
-
-    }
-
-    public static class ScrollExample implements Runnable {
-
-        private final ViewBuffer view;
-        private final Tixel empty;
-
-        public ScrollExample(ViewBuffer view, Tixel empty) {
-            this.view = view;
-            this.empty = empty;
-        }
-
-        @Override
-        public void run() {
-            ViewBuffer copy = copyOriginalScreen();
-
-            while (true) {
-                copy.offsetBy(new Position(0, 2)).forEachElementDo(new ElementAction() {
-                    @Override
-                    public void action(Position position, Tixel tixel) {
-                        view.setPosition$To(position, tixel);
-                    }
-                });
-                sleep();
-                copy.forEachElementDo(new ElementAction() {
-                    @Override
-                    public void action(Position position, Tixel tixel) {
-                        view.setPosition$To(position, tixel);
-                    }
-                });
-                sleep();
-                copy.offsetBy(new Position(0, -2)).forEachElementDo(new ElementAction() {
-                    @Override
-                    public void action(Position position, Tixel tixel) {
-                        view.setPosition$To(position, tixel);
-                    }
-                });
-                sleep();
-                copy.forEachElementDo(new ElementAction() {
-                    @Override
-                    public void action(Position position, Tixel tixel) {
-                        view.setPosition$To(position, tixel);
-                    }
-                });
-                sleep();
-            }
-        }
-
-        private void sleep() {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-
-        private ViewBuffer copyOriginalScreen() {
-            final ViewBuffer copy = new ViewBuffer(view.clipRect, empty);
-
-            view.forEachElementDo(new ElementAction() {
-                @Override
-                public void action(Position position, Tixel tixel) {
-                    copy.setPosition$To(position, tixel);
-                }
-            });
-
-            return copy;
-        }
-
+        return container;
     }
 }
