@@ -10,29 +10,15 @@ import java.awt.event.MouseListener;
 import java.util.Map;
 
 public class Manager implements Runnable {
-	private ViewBuffer view;
 	private JavascriptRunner runner;
 
-	public Manager(String image, ViewBuffer view, Map<Character, Glyph> characterMap) {
-		this.view = view;
-
-		runner = new JavascriptRunner();
-
-		runner.init();
-
-		loadObjectsIntoRunner(view, characterMap);
-		runner.evaluate("var primitives = org.tiestvilee.tui.primitives;");
-
-		runner.evaluate(image);
+	public Manager(JavascriptRunner imageRunner) {
+		runner = imageRunner;
 	}
 
 	private void loadObjectsIntoRunner(ViewBuffer view, Map<Character, Glyph> characterMap) {
 		runner.addObject$As$(view, "view");
 		runner.addObject$As$(characterMap, "characterMap");
-	}
-
-	public ViewBuffer getView() {
-		return view;
 	}
 
 	public KeyListener getKeyListener() {
@@ -45,7 +31,7 @@ public class Manager implements Runnable {
 			@Override
 			public void keyPressed(KeyEvent keyEvent) {
 				runner.addObject$As$(keyEvent, "latestKeyEvent");
-				runner.evaluate("manager.keyPressed(latestKeyEvent)");
+				runner.evaluate("image.keyPressed(latestKeyEvent)");
 			}
 
 			@Override

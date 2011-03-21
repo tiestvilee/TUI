@@ -3,16 +3,12 @@ package org.tiestvilee.tui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
-import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Window;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.*;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,17 +16,17 @@ import javax.swing.JPanel;
 import org.tiestvilee.tui.awt.AwtCanvas;
 import org.tiestvilee.tui.awt.AwtEmptyGlyph;
 import org.tiestvilee.tui.awt.GlyphToAlphabetMapper;
+import org.tiestvilee.tui.manager.FileWrapper;
+import org.tiestvilee.tui.manager.ImageLoader;
+import org.tiestvilee.tui.manager.JavascriptRunner;
 import org.tiestvilee.tui.manager.Manager;
 import org.tiestvilee.tui.primitives.Colour;
 import org.tiestvilee.tui.primitives.ColourPair;
 import org.tiestvilee.tui.primitives.Glyph;
 import org.tiestvilee.tui.primitives.Hue;
-import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.primitives.Tixel;
-import org.tiestvilee.tui.view.View.ElementAction;
 import org.tiestvilee.tui.view.ViewBuffer;
-import org.tiestvilee.tui.viewmanager.ViewManager;
 
 public class Tui {
 
@@ -47,11 +43,13 @@ public class Tui {
         Map<Character, Glyph> characterMap = loadCharacterMap();
         ViewBuffer view = new ViewBuffer(new Rectangle(640 / GlyphToAlphabetMapper.WIDTH, 480 / GlyphToAlphabetMapper.HEIGHT),
             getEmptyTixel(characterMap));
-		String image = loadImage();
-		Manager manager = new Manager(image, view, characterMap);
+
+		JavascriptRunner imageRunner = new ImageLoader(new FileWrapper()).loadImage("tui.image", view, characterMap);
+
+		Manager manager = new Manager(imageRunner);
 
 
-        final AwtCanvas canvas = new AwtCanvas(manager.getView());
+        final AwtCanvas canvas = new AwtCanvas(view);
 //        canvas.addMouseListener(new MouseAdapter() {
 //            public void mouseClicked(MouseEvent evt) {
 //                // Return to normal windowed mode
@@ -90,21 +88,6 @@ public class Tui {
             }
         }
     }
-
-	private static String loadImage() {
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("tui.image")));
-
-			String line;
-			StringBuffer total = new StringBuffer();
-			while((line = reader.readLine()) != null) {
-				total.append(line).append("\n");
-			}
-			return total.toString();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 	private static JFrame enterFullScreenMode(GraphicsDevice gs, DisplayMode old, AwtCanvas canvas) {
 		JFrame frame = createEnclosingWindow(canvas, gs);
