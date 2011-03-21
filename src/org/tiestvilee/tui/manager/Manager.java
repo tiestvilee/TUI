@@ -31,7 +31,7 @@ public class Manager implements Runnable {
 			@Override
 			public void keyPressed(KeyEvent keyEvent) {
 				runner.addObject$As$(keyEvent, "latestKeyEvent");
-				runner.evaluate("image.keyPressed(latestKeyEvent)");
+				runner.evaluate("image.eventHandler.keyPressed(latestKeyEvent)");
 			}
 
 			@Override
