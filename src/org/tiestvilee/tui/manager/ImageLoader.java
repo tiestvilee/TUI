@@ -1,11 +1,10 @@
 package org.tiestvilee.tui.manager;
 
-import org.tiestvilee.tui.primitives.Glyph;
+import org.tiestvilee.tui.primitives.CharacterMap;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +20,7 @@ public class ImageLoader {
 	}
 
 
-	public JavascriptRunner loadImage(String imageName, ViewBuffer view, Map<Character, Glyph> characterMap) throws Exception {
+	public JavascriptRunner loadImage(String imageName, ViewBuffer view, CharacterMap characterMap) throws Exception {
 		JavascriptRunner runner = new JavascriptRunner();
 		runner.init();
 
@@ -36,7 +35,7 @@ public class ImageLoader {
 		return runner;
 	}
 
-	private void addViewAndCharacterMap(ViewBuffer view, Map<Character, Glyph> characterMap, JavascriptRunner runner) {
+	private void addViewAndCharacterMap(ViewBuffer view, CharacterMap characterMap, JavascriptRunner runner) {
 		runner.addObject$As$(view, "view");
 		runner.addObject$As$(characterMap, "characterMap");
 	}

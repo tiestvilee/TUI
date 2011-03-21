@@ -7,15 +7,15 @@ import static junit.framework.Assert.fail;
 import java.util.Set;
 
 import org.junit.Test;
-import org.tiestvilee.tui.primitives.Position;
-import org.tiestvilee.tui.primitives.Rectangle;
-import org.tiestvilee.tui.primitives.Tixel;
+import org.tiestvilee.tui.primitives.*;
 import org.tiestvilee.tui.view.View.ElementAction;
 
 public class ViewBufferTest {
+    static final Glyph glyph = new StubGlyph();
 
-	static final Tixel tixel = new Tixel(null, null);
-	static final Tixel emptyTixel = new Tixel(null, null);
+
+	static final Tixel tixel = new Tixel(glyph, null);
+	static final Tixel emptyTixel = new Tixel(glyph, null);
 
 	@Test
 	public void shouldPlaceTixelAtPosition() {

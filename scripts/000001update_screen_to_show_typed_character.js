@@ -30,7 +30,7 @@ image.unit = {
     platform : null,
 
     keyPressed : function(keyEvent) {
-      var tixel = this.platform.newTixel(characterMap.get(new java.lang.Character(keyEvent.getKeyChar())), this.colourPair);
+      var tixel = this.platform.newTixel(characterMap.get(keyEvent.getKeyChar()), this.colourPair);
       var position = this.platform.newPosition(5,6);
       this.view.setPosition$To(position, tixel);
     }

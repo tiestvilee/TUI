@@ -3,15 +3,15 @@ package org.tiestvilee.tui.view;
 import static junit.framework.Assert.*;
 
 import org.junit.Test;
-import org.tiestvilee.tui.primitives.Position;
-import org.tiestvilee.tui.primitives.Rectangle;
-import org.tiestvilee.tui.primitives.Tixel;
+import org.tiestvilee.tui.primitives.*;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 public class ViewClippingTest {
+    static final Glyph glyph = new StubGlyph();
 
-	static final Tixel tixel = new Tixel(null, null);
-	static final Tixel emptyTixel = new Tixel(null, null);
+
+	static final Tixel tixel = new Tixel(glyph, null);
+	static final Tixel emptyTixel = new Tixel(glyph, null);
 
 	@Test
 	public void shouldClipExistingTixels() {

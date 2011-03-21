@@ -19,13 +19,7 @@ import javax.swing.JPanel;
 import org.tiestvilee.tui.awt.AwtCanvas;
 import org.tiestvilee.tui.awt.AwtEmptyGlyph;
 import org.tiestvilee.tui.awt.GlyphToAlphabetMapper;
-import org.tiestvilee.tui.primitives.Colour;
-import org.tiestvilee.tui.primitives.ColourPair;
-import org.tiestvilee.tui.primitives.Glyph;
-import org.tiestvilee.tui.primitives.Hue;
-import org.tiestvilee.tui.primitives.Position;
-import org.tiestvilee.tui.primitives.Rectangle;
-import org.tiestvilee.tui.primitives.Tixel;
+import org.tiestvilee.tui.primitives.*;
 import org.tiestvilee.tui.view.View.ElementAction;
 import org.tiestvilee.tui.view.ViewBuffer;
 
@@ -49,7 +43,7 @@ public class TakeControlOfScreen {
         Glyph emptyGlyph = new AwtEmptyGlyph(GlyphToAlphabetMapper.WIDTH, GlyphToAlphabetMapper.HEIGHT);
         Tixel emptyTixel = new Tixel(emptyGlyph, new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
 
-        Map<Character, Glyph> characterMap = (new GlyphToAlphabetMapper()).loadMap(emptyGlyph);
+        CharacterMap characterMap = (new GlyphToAlphabetMapper()).loadMap(emptyGlyph);
 
         ViewBuffer view = new ViewBuffer(new Rectangle(640 / GlyphToAlphabetMapper.WIDTH, 480 / GlyphToAlphabetMapper.HEIGHT),
             emptyTixel);
@@ -99,7 +93,7 @@ public class TakeControlOfScreen {
         }
     }
 
-    private static void writeFile$To$Using(String fileName, ViewBuffer view, Map<Character, Glyph> characterMap) {
+    private static void writeFile$To$Using(String fileName, ViewBuffer view, CharacterMap characterMap) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader((new TakeControlOfScreen()).getClass()
                 .getClassLoader().getResourceAsStream(fileName)));

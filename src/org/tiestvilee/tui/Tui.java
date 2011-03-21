@@ -5,10 +5,6 @@ import java.awt.Dimension;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.io.*;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,12 +16,7 @@ import org.tiestvilee.tui.manager.FileWrapper;
 import org.tiestvilee.tui.manager.ImageLoader;
 import org.tiestvilee.tui.manager.JavascriptRunner;
 import org.tiestvilee.tui.manager.Manager;
-import org.tiestvilee.tui.primitives.Colour;
-import org.tiestvilee.tui.primitives.ColourPair;
-import org.tiestvilee.tui.primitives.Glyph;
-import org.tiestvilee.tui.primitives.Hue;
-import org.tiestvilee.tui.primitives.Rectangle;
-import org.tiestvilee.tui.primitives.Tixel;
+import org.tiestvilee.tui.primitives.*;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 public class Tui {
@@ -40,7 +31,7 @@ public class Tui {
         final DisplayMode old = gs.getDisplayMode();
 
 
-        Map<Character, Glyph> characterMap = loadCharacterMap();
+        CharacterMap characterMap = loadCharacterMap();
         ViewBuffer view = new ViewBuffer(new Rectangle(640 / GlyphToAlphabetMapper.WIDTH, 480 / GlyphToAlphabetMapper.HEIGHT),
             getEmptyTixel(characterMap));
 
@@ -101,13 +92,13 @@ public class Tui {
 		return frame;
 	}
 
-	private static Tixel getEmptyTixel(Map<Character, Glyph> characterMap) {
+	private static Tixel getEmptyTixel(CharacterMap characterMap) {
         return new Tixel(characterMap.get(' '), new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
     }
 
-    private static Map<Character, Glyph> loadCharacterMap() {
+    private static CharacterMap loadCharacterMap() {
         Glyph emptyGlyph = new AwtEmptyGlyph(GlyphToAlphabetMapper.WIDTH, GlyphToAlphabetMapper.HEIGHT);
-        Map<Character, Glyph> characterMap = (new GlyphToAlphabetMapper()).loadMap(emptyGlyph);
+        CharacterMap characterMap = (new GlyphToAlphabetMapper()).loadMap(emptyGlyph);
         return characterMap;
     }
 

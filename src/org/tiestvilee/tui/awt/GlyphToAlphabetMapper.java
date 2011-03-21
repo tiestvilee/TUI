@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.tiestvilee.tui.primitives.CharacterMap;
 import org.tiestvilee.tui.primitives.Glyph;
 import org.tiestvilee.tui.primitives.Rectangle;
 
@@ -15,7 +16,7 @@ public class GlyphToAlphabetMapper {
     public final static int WIDTH = 6;
     public final static int HEIGHT = 10;
 
-    public Map<Character, Glyph> loadMap(Glyph emptyGlyph) {
+    public CharacterMap loadMap(Glyph emptyGlyph) {
         Map<Character, Glyph> result = new HashMap<Character, Glyph>();
         BufferedImage alphabet = getAlphabet();
 
@@ -25,7 +26,7 @@ public class GlyphToAlphabetMapper {
         }
         result.put(' ', emptyGlyph);
 
-        return result;
+        return new CharacterMap(result);
     }
 
     private BufferedImage getAlphabet() {
@@ -37,4 +38,5 @@ public class GlyphToAlphabetMapper {
             throw new RuntimeException("failed to load alphabet");
         }
     }
+
 }
