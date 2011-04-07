@@ -17,6 +17,8 @@ public abstract class View {
 
     public abstract void forEachElementDo(ElementAction elementAction);
 
+    public abstract Rectangle getClip();
+
     public void writeContentsTo(final View target) {
         forEachElementDo(new ElementAction() {
             @Override

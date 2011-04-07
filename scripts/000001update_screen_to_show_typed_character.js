@@ -22,32 +22,32 @@ image.platform = {
   }
 };
 
-image.unit = {
-  textView : {
-    colourPair : null,
-    view : null,
-    characterMap : null,
-    platform : null,
+var textView = {};
 
-    keyPressed : function(keyEvent) {
-      var tixel = this.platform.newTixel(characterMap.get(keyEvent.getKeyChar()), this.colourPair);
-      var position = this.platform.newPosition(5,6);
-      this.view.setPosition$To(position, tixel);
-    }
+textView.unit = {
+  colourPair : null,
+  view : null,
+  characterMap : null,
+  platform : null,
+
+  keyPressed : function(keyEvent) {
+    var tixel = this.platform.newTixel(characterMap.get(keyEvent.getKeyChar()), this.colourPair);
+    var position = this.platform.newPosition(5,6);
+    this.view.setPosition$To(position, tixel);
   }
 };
 
-image.instance = {
-  textView : beget(image.unit.textView, {
+textView.instance = beget(textView.unit, {
     colourPair : new image.platform.primitives.ColourPair(new image.platform.primitives.Colour(1.0, image.platform.primitives.Hue.WHITE), new image.platform.primitives.Colour(0.0, image.platform.primitives.Hue.BLACK)),
     view : view,
     characterMap : characterMap,
     platform : image.platform,
-  })
-};
+  });
+
+image.apps = {textView : textView};
 
 image.eventHandler = {
   keyPressed : function(keyEvent) {
-    image.instance.textView.keyPressed(keyEvent);
+    image.apps.textView.instance.keyPressed(keyEvent);
   }
 };

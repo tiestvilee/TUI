@@ -55,4 +55,8 @@ public class ViewBuffer extends View {
         return dirtyPositions.getPositionsAndClearThem();
     }
 
+    @Override
+    public Rectangle getClip() {
+        return clipRect;
+    }
 }

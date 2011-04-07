@@ -25,7 +25,8 @@ public class Manager implements Runnable {
 		return new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent keyEvent) {
-				//To change body of implemented methods use File | Settings | File Templates.
+                runner.addObject$As$(keyEvent, "latestKeyEvent");
+                runner.evaluate("image.eventHandler.keyTyped(latestKeyEvent)");
 			}
 
 			@Override
@@ -36,7 +37,8 @@ public class Manager implements Runnable {
 
 			@Override
 			public void keyReleased(KeyEvent keyEvent) {
-				//To change body of implemented methods use File | Settings | File Templates.
+                runner.addObject$As$(keyEvent, "latestKeyEvent");
+                runner.evaluate("image.eventHandler.keyReleased(latestKeyEvent)");
 			}
 		};
 	}

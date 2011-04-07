@@ -59,4 +59,14 @@ public class ViewOffsetTest {
 		assertEquals(view.getTixelAt(new Position(1,1)), tixel);
 		assertEquals(view.getTixelAt(new Position(2,2)), emptyTixel);
 	}
+
+    @Test
+    public void shouldReturnClipRegion() {
+		// Given
+		ViewBuffer originalView = new ViewBuffer(new Rectangle(10, 10, 100, 100), emptyTixel);
+		View offsetView = originalView.offsetBy(new Position(10,10));
+
+        assertEquals(offsetView.getClip(), new Rectangle(0, 0, 100, 100));
+
+    }
 }

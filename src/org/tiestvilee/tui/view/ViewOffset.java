@@ -1,6 +1,7 @@
 package org.tiestvilee.tui.view;
 
 import org.tiestvilee.tui.primitives.Position;
+import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.primitives.Tixel;
 
 public class ViewOffset extends View {
@@ -32,5 +33,10 @@ public class ViewOffset extends View {
                 elementAction.action(position.offsetBy(offset.negate()), tixel);
             }
         });
+    }
+
+    @Override
+    public Rectangle getClip() {
+        return underlyingView.getClip().offsetBy(offset.negate());
     }
 }

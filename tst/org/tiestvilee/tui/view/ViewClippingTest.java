@@ -67,4 +67,22 @@ public class ViewClippingTest {
 		assertEquals(view.getTixelAt(new Position(3,3)), emptyTixel);
 	}
 
+    @Test
+    public void shouldReturnClipRegion() {
+        ViewBuffer underlyingView = new ViewBuffer(new Rectangle(0,0,100,100), emptyTixel);
+
+        View clippedView = underlyingView.clipTo(new Rectangle(50,50,100,100));
+
+        assertEquals(clippedView.getClip(), new Rectangle(50,50,50,50));
+    }
+
+    @Test
+    public void shouldReturnClipRegion2() {
+        ViewBuffer underlyingView = new ViewBuffer(new Rectangle(0,0,100,100), emptyTixel);
+
+        View clippedView = underlyingView.clipTo(new Rectangle(250,250,100,100));
+
+        assertEquals(clippedView.getClip(), new Rectangle(0,0,0,0));
+    }
+
 }
