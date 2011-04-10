@@ -3,15 +3,18 @@ package org.tiestvilee.tui.view;
 import static junit.framework.Assert.*;
 
 import org.junit.Test;
-import org.tiestvilee.tui.primitives.Position;
+import org.tiestvilee.tui.primitives.*;
 import org.tiestvilee.tui.primitives.Rectangle;
-import org.tiestvilee.tui.primitives.Tixel;
 import org.tiestvilee.tui.view.ViewBuffer;
+
+import java.awt.*;
 
 public class ViewOffsetTest {
 
-	static final Tixel tixel = new Tixel(null, null);
-	static final Tixel emptyTixel = new Tixel(null, null);
+    static final Glyph glyph = new StubGlyph();
+
+	static final Tixel tixel = new Tixel(glyph, null);
+	static final Tixel emptyTixel = new Tixel(glyph, null);
 
 	@Test
 	public void shouldOffsetExistingTixels() {
@@ -56,4 +59,14 @@ public class ViewOffsetTest {
 		assertEquals(view.getTixelAt(new Position(1,1)), tixel);
 		assertEquals(view.getTixelAt(new Position(2,2)), emptyTixel);
 	}
+
+    @Test
+    public void shouldReturnClipRegion() {
+		// Given
+		ViewBuffer originalView = new ViewBuffer(new Rectangle(10, 10, 100, 100), emptyTixel);
+		View offsetView = originalView.offsetBy(new Position(10,10));
+
+        assertEquals(offsetView.getClip(), new Rectangle(0, 0, 100, 100));
+
+    }
 }

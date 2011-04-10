@@ -41,4 +41,9 @@ public class ViewClipping extends View {
             }
         });
     }
+
+    @Override
+    public Rectangle getClip() {
+        return clipRegion.intersectWith(underlyingView.getClip());
+    }
 }

@@ -3,15 +3,15 @@ package org.tiestvilee.tui.view;
 import static junit.framework.Assert.*;
 
 import org.junit.Test;
-import org.tiestvilee.tui.primitives.Position;
-import org.tiestvilee.tui.primitives.Rectangle;
-import org.tiestvilee.tui.primitives.Tixel;
+import org.tiestvilee.tui.primitives.*;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 public class ViewClippingTest {
+    static final Glyph glyph = new StubGlyph();
 
-	static final Tixel tixel = new Tixel(null, null);
-	static final Tixel emptyTixel = new Tixel(null, null);
+
+	static final Tixel tixel = new Tixel(glyph, null);
+	static final Tixel emptyTixel = new Tixel(glyph, null);
 
 	@Test
 	public void shouldClipExistingTixels() {
@@ -66,5 +66,23 @@ public class ViewClippingTest {
 		assertEquals(view.getTixelAt(new Position(2,2)), tixel);
 		assertEquals(view.getTixelAt(new Position(3,3)), emptyTixel);
 	}
+
+    @Test
+    public void shouldReturnClipRegion() {
+        ViewBuffer underlyingView = new ViewBuffer(new Rectangle(0,0,100,100), emptyTixel);
+
+        View clippedView = underlyingView.clipTo(new Rectangle(50,50,100,100));
+
+        assertEquals(clippedView.getClip(), new Rectangle(50,50,50,50));
+    }
+
+    @Test
+    public void shouldReturnClipRegion2() {
+        ViewBuffer underlyingView = new ViewBuffer(new Rectangle(0,0,100,100), emptyTixel);
+
+        View clippedView = underlyingView.clipTo(new Rectangle(250,250,100,100));
+
+        assertEquals(clippedView.getClip(), new Rectangle(0,0,0,0));
+    }
 
 }

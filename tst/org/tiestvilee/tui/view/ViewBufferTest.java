@@ -7,15 +7,15 @@ import static junit.framework.Assert.fail;
 import java.util.Set;
 
 import org.junit.Test;
-import org.tiestvilee.tui.primitives.Position;
-import org.tiestvilee.tui.primitives.Rectangle;
-import org.tiestvilee.tui.primitives.Tixel;
+import org.tiestvilee.tui.primitives.*;
 import org.tiestvilee.tui.view.View.ElementAction;
 
 public class ViewBufferTest {
+    static final Glyph glyph = new StubGlyph();
 
-	static final Tixel tixel = new Tixel(null, null);
-	static final Tixel emptyTixel = new Tixel(null, null);
+
+	static final Tixel tixel = new Tixel(glyph, null);
+	static final Tixel emptyTixel = new Tixel(glyph, null);
 
 	@Test
 	public void shouldPlaceTixelAtPosition() {
@@ -78,12 +78,13 @@ public class ViewBufferTest {
 	@Test
 	public void shouldCombineViewsEffortlessly() {
 		final Position expectedTixelPosition = new Position(51,51);
+
 		ViewBuffer view = new ViewBuffer(new Rectangle(100,100), emptyTixel);
 		view.setPosition$To(new Position(10,10), tixel);
 		view.setPosition$To(new Position(50,50), tixel);
 		view.setPosition$To(new Position(90,90), tixel);
 		
-		View tranformedView = view.offsetBy(new Position(1,1)).clipTo(new Rectangle(20,20,50,50)).offsetBy(new Position(-2,-2));
+		View tranformedView = view.offsetBy(new Position(1,1)).clipTo(new Rectangle(20,20,50,85)).offsetBy(new Position(-2,-2));
 		
 		assertEquals(tixel, tranformedView.getTixelAt(expectedTixelPosition));
 		
@@ -107,6 +108,28 @@ public class ViewBufferTest {
 			}
 			
 		});
+
+	}
+    
+	@Test
+	public void shouldCombineViewsEffortlesslyOnWayDownToo() {
+		ViewBuffer view = new ViewBuffer(new Rectangle(100,100), emptyTixel);
+
+		View tranformedView = view.offsetBy(new Position(1,1)).clipTo(new Rectangle(20,20,50,85)).offsetBy(new Position(-2,-2));
+
+        assertEquals(tranformedView.getClip(), new Rectangle(22,22,50,79));
+
+        tranformedView.setPosition$To(new Position(21,21), tixel);
+        assertEquals(view.getTixelAt(new Position(20,20)), emptyTixel);
+
+        tranformedView.setPosition$To(new Position(22,22), tixel);
+        assertEquals(view.getTixelAt(new Position(21,21)), tixel);
+
+        tranformedView.setPosition$To(new Position(40,100), tixel);
+        assertEquals(view.getTixelAt(new Position(39,99)), tixel);
+
+        tranformedView.setPosition$To(new Position(40,101), tixel);
+        assertEquals(view.getTixelAt(new Position(39,100)), emptyTixel);
 	}
 	
 	@Test
@@ -139,4 +162,11 @@ public class ViewBufferTest {
 
 		assertEquals(view.getDirtyElementsAndClearThem().size(), 0);
 	}
+
+    @Test
+    public void shouldReturnClipRegion() {
+        ViewBuffer view = new ViewBuffer(new Rectangle(5,6,7,8), emptyTixel);
+
+        assertEquals(view.getClip(), new Rectangle(5,6,7,8));
+    }
 }
