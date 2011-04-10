@@ -4,7 +4,9 @@ import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.primitives.Tixel;
 
-public abstract class View {
+import java.io.Serializable;
+
+public abstract class View implements Serializable {
     protected final Tixel emptyTixel;
 
     protected View(Tixel emptyTixel) {
@@ -12,6 +14,10 @@ public abstract class View {
     }
 
     public abstract void setPosition$To(Position position, Tixel tixel);
+
+    public void clearPositionAt(Position position) {
+        setPosition$To(position, emptyTixel);
+    }
 
     public abstract Tixel getTixelAt(Position position);
 

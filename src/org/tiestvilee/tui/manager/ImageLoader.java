@@ -1,10 +1,12 @@
 package org.tiestvilee.tui.manager;
 
+import org.mozilla.javascript.Scriptable;
 import org.tiestvilee.tui.primitives.CharacterMap;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,7 +47,7 @@ public class ImageLoader {
 	}
 
 	private void deserializeImage(JavascriptRunner runner, String imageName) {
-		InputStream stream = fileWrapper.streamFor(imageName);
+		InputStream stream = fileWrapper.inputStreamFor(imageName);
 		runner.deserialize$to$andDestroyCurrentScope(stream, "image");
 	}
 
@@ -66,4 +68,9 @@ public class ImageLoader {
 			}
 		}
 	}
+
+    public void saveImage(JavascriptRunner runner, String imageName) {
+		OutputStream stream = fileWrapper.outputStreamFor(imageName);
+        runner.serialize$to$andCloseStream((Scriptable) runner.evaluate("image = image;"), stream);
+    }
 }

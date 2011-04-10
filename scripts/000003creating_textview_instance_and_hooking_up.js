@@ -1,5 +1,6 @@
+
 image.instances.textView = beget(image.apps.textView.integration, {
-    colourPair : new image.platform.primitives.ColourPair(new image.platform.primitives.Colour(1.0, image.platform.primitives.Hue.WHITE), new image.platform.primitives.Colour(0.0, image.platform.primitives.Hue.BLACK)),
+    colourPair : new image.platform.newColourPair(new image.platform.newColour(1.0, org.tiestvilee.tui.primitives.Hue.WHITE), new image.platform.newColour(0.0, org.tiestvilee.tui.primitives.Hue.BLACK)),
     view : view.clipTo(image.platform.newRectangle(5,5)).offsetBy(image.platform.newPosition(-5,-5)),
 //    view : view.offsetBy(image.platform.newPosition(-5,-5)).clipTo(image.platform.newRectangle(10,10)),
     characterMap : characterMap,
@@ -7,14 +8,35 @@ image.instances.textView = beget(image.apps.textView.integration, {
     cursorPosition : image.platform.newPosition(5,5)
   });
 
-image.eventHandler = {
-  keyPressed : function(keyEvent) {
-    image.instances.textView.keyPressed(keyEvent);
+image.apps.windowManager = { unit : {
+    currentTarget : null,
+    keyPressed : function(keyEvent) {
+      this.currentTarget.keyPressed(keyEvent);
+    },
+    keyTyped : function(keyEvent) {
+      this.currentTarget.keyTyped(keyEvent);
+    },
+    keyReleased : function(keyEvent) {
+      if(this.currentTarget.keyReleased) {
+        this.currentTarget.keyReleased(keyEvent);
+      }
+    }
   }
 };
 
+image.instances.windowManager = beget(image.apps.windowManager.unit, {
+  currentTarget : image.instances.textView
+})
 
-image.eventHandler.keyTyped = function(keyEvent) {
-  image.instances.textView.keyTyped(keyEvent);
-}
-image.eventHandler.keyReleased = function(keyEvent) {}
+image.eventHandler = {
+  keyPressed : function(keyEvent) {
+    image.instances.windowManager.keyPressed(keyEvent);
+  },
+  keyTyped : function(keyEvent) {
+    image.instances.windowManager.keyTyped(keyEvent);
+  },
+  keyReleased : function(keyEvent) {
+    image.instances.windowManager.keyReleased(keyEvent);
+  }
+};
+

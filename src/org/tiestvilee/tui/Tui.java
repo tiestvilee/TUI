@@ -35,10 +35,12 @@ public class Tui {
         ViewBuffer view = new ViewBuffer(new Rectangle(640 / GlyphToAlphabetMapper.WIDTH, 480 / GlyphToAlphabetMapper.HEIGHT),
             getEmptyTixel(characterMap));
 
-		JavascriptRunner imageRunner = new ImageLoader(new FileWrapper()).loadImage("tui.image", view, characterMap);
+        ImageLoader imageLoader = new ImageLoader(new FileWrapper());
+        JavascriptRunner imageRunner = imageLoader.loadImage("tui.image", view, characterMap);
+
+        imageLoader.saveImage(imageRunner, "temp.image");
 
 		Manager manager = new Manager(imageRunner);
-
 
         final AwtCanvas canvas = new AwtCanvas(view);
 //        canvas.addMouseListener(new MouseAdapter() {

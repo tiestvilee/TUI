@@ -3,7 +3,7 @@ package org.tiestvilee.tui.manager;
 import java.io.*;
 
 public class FileWrapper {
-	public InputStream streamFor(String fileName) {
+	public InputStream inputStreamFor(String fileName) {
 		try {
 			return new FileInputStream(fileName);
 		} catch (FileNotFoundException e) {
@@ -17,7 +17,7 @@ public class FileWrapper {
 
 	public String readFile(File file) {
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(streamFor(file.getCanonicalPath())));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStreamFor(file.getCanonicalPath())));
 
 			String line;
 			StringBuffer total = new StringBuffer();
@@ -30,4 +30,12 @@ public class FileWrapper {
 		}
 
 	}
+
+    public OutputStream outputStreamFor(String fileName) {
+        try {
+            return new FileOutputStream(fileName);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("There was a problem getting a stream for file:" + fileName, e);
+        }
+    }
 }

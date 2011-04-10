@@ -1,17 +1,17 @@
 package org.tiestvilee.tui.view;
 
-import java.util.Set;
-
 import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.primitives.Tixel;
+
+import java.util.Set;
 
 public class ViewBuffer extends View {
 
     public final Rectangle clipRect;
 
     private final Tixel[][] screen;
-    private final PositionSet dirtyPositions = new PositionSet();
+    private transient final PositionSet dirtyPositions = new PositionSet();
 
     public ViewBuffer(Rectangle clipRect, final Tixel emptyTixel) {
         super(emptyTixel);

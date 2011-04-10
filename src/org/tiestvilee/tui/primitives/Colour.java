@@ -1,8 +1,9 @@
 package org.tiestvilee.tui.primitives;
 
 import java.awt.Color;
+import java.io.Serializable;
 
-public class Colour {
+public class Colour implements Serializable {
 
     public final float intensity;
     public final Hue hue;

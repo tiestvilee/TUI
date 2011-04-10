@@ -2,6 +2,7 @@ package org.tiestvilee.tui.awt;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +15,8 @@ public class AwtGlyph implements Glyph {
 
     private final int width;
     private final int height;
-    private final BufferedImage image;
-    private final Map<ColourPair, BufferedImage> map = new HashMap<ColourPair, BufferedImage>();
+    private transient final BufferedImage image;
+    private transient final Map<ColourPair, BufferedImage> map = new HashMap<ColourPair, BufferedImage>();
 
     public AwtGlyph(BufferedImage image) {
         this.image = image;

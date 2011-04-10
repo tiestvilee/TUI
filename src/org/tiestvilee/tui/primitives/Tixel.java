@@ -2,8 +2,9 @@ package org.tiestvilee.tui.primitives;
 
 
 import java.awt.Graphics2D;
+import java.io.Serializable;
 
-public class Tixel {
+public class Tixel implements Serializable {
 
     public final Glyph glyph;
     public final ColourPair colourPair;

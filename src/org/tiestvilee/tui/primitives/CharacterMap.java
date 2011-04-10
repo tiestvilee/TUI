@@ -1,5 +1,6 @@
 package org.tiestvilee.tui.primitives;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Map;
 * Time: 14:42
 * To change this template use File | Settings | File Templates.
 */
-public class CharacterMap {
+public class CharacterMap implements Serializable {
     Map<Character, Glyph> characterMap;
 
     public CharacterMap(Map<Character, Glyph> characterMap) {

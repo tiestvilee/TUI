@@ -1,6 +1,8 @@
 package org.tiestvilee.tui.primitives;
 
-public class Rectangle {
+import java.io.Serializable;
+
+public class Rectangle implements Serializable {
 
     public final int x;
     public final int y;

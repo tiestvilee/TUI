@@ -1,8 +1,9 @@
 package org.tiestvilee.tui.primitives;
 
 import java.awt.Color;
+import java.io.Serializable;
 
-public class Hue {
+public class Hue implements Serializable {
 
     public static final Hue BLACK = new Hue();
     public static final Hue WHITE = new Hue();

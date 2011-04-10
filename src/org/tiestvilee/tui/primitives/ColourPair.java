@@ -3,8 +3,9 @@ package org.tiestvilee.tui.primitives;
 import java.awt.Color;
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
+import java.io.Serializable;
 
-public class ColourPair {
+public class ColourPair implements Serializable {
     public final Colour fore;
     public final Colour back;
     private ColorModel colorModel;
