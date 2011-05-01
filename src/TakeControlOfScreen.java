@@ -95,6 +95,7 @@ public class TakeControlOfScreen {
 
     private static void writeFile$To$Using(String fileName, ViewBuffer view, CharacterMap characterMap) {
         try {
+//            java.lang.System
             BufferedReader reader = new BufferedReader(new InputStreamReader((new TakeControlOfScreen()).getClass()
                 .getClassLoader().getResourceAsStream(fileName)));
 

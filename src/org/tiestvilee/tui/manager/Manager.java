@@ -47,11 +47,15 @@ public class Manager implements Runnable {
 		return new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
+                MouseEvent ha = mouseEvent;
+                System.out.println(ha);
 				//To change body of implemented methods use File | Settings | File Templates.
 			}
 
 			@Override
 			public void mousePressed(MouseEvent mouseEvent) {
+                MouseEvent ha = mouseEvent;
+                System.out.println(ha);
 				//To change body of implemented methods use File | Settings | File Templates.
 			}
 

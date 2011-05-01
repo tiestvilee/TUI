@@ -7,7 +7,7 @@ import org.tiestvilee.tui.primitives.Tixel;
 public class ViewOffset extends View {
 
     private final View underlyingView;
-    private final Position offset;
+    private Position offset;
 
     public ViewOffset(View underlyingView, Position offset, Tixel emptyTixel) {
         super(emptyTixel);
@@ -38,5 +38,9 @@ public class ViewOffset extends View {
     @Override
     public Rectangle getClip() {
         return underlyingView.getClip().offsetBy(offset.negate());
+    }
+
+    public void mutateBy(Position position) {
+        offset = offset.offsetBy(position);
     }
 }

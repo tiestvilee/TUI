@@ -1,10 +1,6 @@
 package org.tiestvilee.tui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.DisplayMode;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,6 +13,7 @@ import org.tiestvilee.tui.manager.ImageLoader;
 import org.tiestvilee.tui.manager.JavascriptRunner;
 import org.tiestvilee.tui.manager.Manager;
 import org.tiestvilee.tui.primitives.*;
+import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 public class Tui {
@@ -30,6 +27,8 @@ public class Tui {
         GraphicsDevice gs = ge.getDefaultScreenDevice();
         final DisplayMode old = gs.getDisplayMode();
 
+        System.out.println(Toolkit.getDefaultToolkit().getDesktopProperty("sun.awt.enableExtraMouseButtons"));
+        System.out.println(MouseInfo.getNumberOfButtons());
 
         CharacterMap characterMap = loadCharacterMap();
         ViewBuffer view = new ViewBuffer(new Rectangle(640 / GlyphToAlphabetMapper.WIDTH, 480 / GlyphToAlphabetMapper.HEIGHT),
@@ -69,6 +68,7 @@ public class Tui {
 
             win.addKeyListener(manager.getKeyListener());
 			win.addMouseListener(manager.getMouseListener());
+            canvas.addMouseListener(manager.getMouseListener());
             (new Thread(manager)).start();
 
             canvas.showYourself();

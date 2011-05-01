@@ -24,7 +24,8 @@ public class ViewOffsetTest {
 		
 		// When
 		View offsetView = view.offsetBy(new Position(1,1));
-		
+
+        // Then
 		assertEquals(offsetView.getTixelAt(new Position(2,2)), tixel);
 		assertEquals(offsetView.getTixelAt(new Position(3,3)), emptyTixel);
 	}
@@ -66,7 +67,23 @@ public class ViewOffsetTest {
 		ViewBuffer originalView = new ViewBuffer(new Rectangle(10, 10, 100, 100), emptyTixel);
 		View offsetView = originalView.offsetBy(new Position(10,10));
 
+        // Then
         assertEquals(offsetView.getClip(), new Rectangle(0, 0, 100, 100));
+    }
+
+    @Test
+    public void shouldMutate() {
+		// Given
+		ViewBuffer view = new ViewBuffer(new Rectangle(100,100), emptyTixel);
+		view.setPosition$To(new Position(3,3), tixel);
+        ViewOffset offsetView = (ViewOffset) view.offsetBy(new Position(0,0));
+
+		// When
+		offsetView.mutateBy(new Position(1, 1));
+
+        // Then
+		assertEquals(offsetView.getTixelAt(new Position(2,2)), tixel);
+		assertEquals(offsetView.getTixelAt(new Position(3, 3)), emptyTixel);
 
     }
 }
