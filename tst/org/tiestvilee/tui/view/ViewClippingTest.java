@@ -12,8 +12,9 @@ public class ViewClippingTest {
 
 	static final Tixel tixel = new Tixel(glyph, null);
 	static final Tixel emptyTixel = new Tixel(glyph, null);
+    private boolean didRedraw;
 
-	@Test
+    @Test
 	public void shouldClipExistingTixels() {
 		// Given
 		ViewBuffer view = new ViewBuffer(new Rectangle(100,100), emptyTixel);
@@ -85,4 +86,20 @@ public class ViewClippingTest {
         assertEquals(clippedView.getClip(), new Rectangle(0,0,0,0));
     }
 
+
+    @Test
+    public void shouldListenToUnderlyingViewForRedrawEvents() {
+		ViewBuffer underlyingView = new ViewBuffer(new Rectangle(100,100), emptyTixel);
+        View clippedView = underlyingView.clipTo(new Rectangle(250,250,100,100));
+        clippedView.listenForRedraw(new RedrawListener() {
+            @Override
+            public void gotRedraw() {
+                didRedraw = true;
+            }
+        });
+
+        underlyingView.redraw();
+
+        assertTrue(didRedraw);
+    }
 }

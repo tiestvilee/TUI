@@ -1,19 +1,4 @@
 
-image.apps.textView.temp = {};
-image.apps.textView.temp.instances = [beget(image.apps.textView.integration, {
-    colourPair : new image.platform.newColourPair(new image.platform.newColour(1.0, org.tiestvilee.tui.primitives.Hue.WHITE), new image.platform.newColour(0.0, org.tiestvilee.tui.primitives.Hue.BLACK)),
-    view : view,
-//    view : view.clipTo(image.platform.newRectangle(5,5)).offsetBy(image.platform.newPosition(-5,-5)),
-//    view : view.offsetBy(image.platform.newPosition(-5,-5)).clipTo(image.platform.newRectangle(10,10)),
-    characterMap : characterMap,
-    platform : image.platform,
-    cursorPosition : image.platform.newPosition(0,0)
-  })];
-
-(function scope() {
-  var currentTextView = image.apps.textView.temp.instances[0];
-  currentTextView.command('load world.txt');
-})();
 
 image.apps.windowManager = { unit : {
     currentTarget : null,
@@ -32,10 +17,6 @@ image.apps.windowManager = { unit : {
   temp : {}
 };
 
-image.apps.windowManager.temp.instance = beget(image.apps.windowManager.unit, {
-  currentTarget : image.apps.textView.temp.instances[0]
-});
-
 image.eventHandler = {
   keyPressed : function(keyEvent) {
     image.apps.windowManager.temp.instance.keyPressed(keyEvent);
@@ -47,4 +28,49 @@ image.eventHandler = {
     image.apps.windowManager.temp.instance.keyReleased(keyEvent);
   }
 };
+
+image.apps.fileViewer = (function() {
+  var unit = {
+    keymappings : null,
+    scrollView : null,
+    keyPressed : function(keyEvent) {
+      switch(keyEvent.getKeyCode()) {
+        case this.keymappings.LEFT :
+            this.scrollView.offsetBy(image.platform.newPosition(-1, 0));
+          break;
+        case this.keymappings.RIGHT :
+            this.scrollView.offsetBy(image.platform.newPosition(1, 0));
+          break;
+        case this.keymappings.UP :
+            this.scrollView.offsetBy(image.platform.newPosition(0, -1));
+          break;
+        case this.keymappings.DOWN :
+            this.scrollView.offsetBy(image.platform.newPosition(0, 1));
+          break;
+      }
+    },
+    keyTyped : function () {}
+  };
+
+  var integration = beget(unit, {
+    keymappings : image.platform.keymappings
+  })
+
+  main = function(view, fileName) {
+    var scrollView = view.offsetBy(image.platform.newPosition(0,0));
+    var currentScrollView = image.components.scrollPane.main(view);
+    var currentTextView = image.components.textView.main(currentScrollView.view);
+    currentTextView.command('load ' + fileName);
+
+    return beget(integration, {scrollView : currentScrollView});
+  }
+
+  return {unit : unit, integration : integration, main : main};
+}) ();
+
+
+image.apps.windowManager.temp.instance = beget(image.apps.windowManager.unit, {
+  currentTarget : image.apps.fileViewer.main(view.clipTo(image.platform.newRectangle(110,24)), "hello.txt")
+});
+image.apps.fileViewer.main(view.offsetBy(image.platform.newPosition(0,24)).clipTo(image.platform.newRectangle(110,24)), "hello.txt")
 

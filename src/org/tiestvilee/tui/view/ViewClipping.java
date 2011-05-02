@@ -4,7 +4,7 @@ import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.primitives.Tixel;
 
-public class ViewClipping extends View {
+public class ViewClipping extends View implements RedrawListener {
 
     private final View underlyingView;
     private final Rectangle clipRegion;
@@ -13,6 +13,7 @@ public class ViewClipping extends View {
         super(emptyTixel);
         this.underlyingView = underlyingView;
         this.clipRegion = clipRegion;
+        underlyingView.listenForRedraw(this);
     }
 
     @Override
@@ -45,5 +46,10 @@ public class ViewClipping extends View {
     @Override
     public Rectangle getClip() {
         return clipRegion.intersectWith(underlyingView.getClip());
+    }
+
+    @Override
+    public void gotRedraw() {
+        redraw();
     }
 }

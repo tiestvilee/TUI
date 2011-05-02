@@ -15,6 +15,7 @@ public class ViewOffsetTest {
 
 	static final Tixel tixel = new Tixel(glyph, null);
 	static final Tixel emptyTixel = new Tixel(glyph, null);
+    private boolean didRedraw;
 
 	@Test
 	public void shouldOffsetExistingTixels() {
@@ -85,5 +86,21 @@ public class ViewOffsetTest {
 		assertEquals(offsetView.getTixelAt(new Position(2,2)), tixel);
 		assertEquals(offsetView.getTixelAt(new Position(3, 3)), emptyTixel);
 
+    }
+
+    @Test
+    public void shouldListenToUnderlyingViewForRedrawEvents() {
+		ViewBuffer view = new ViewBuffer(new Rectangle(100,100), emptyTixel);
+        ViewOffset offsetView = (ViewOffset) view.offsetBy(new Position(0,0));
+        offsetView.listenForRedraw(new RedrawListener() {
+            @Override
+            public void gotRedraw() {
+                didRedraw = true;
+            }
+        });
+
+        view.redraw();
+
+        assertTrue(didRedraw);
     }
 }

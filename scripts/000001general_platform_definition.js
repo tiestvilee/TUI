@@ -54,5 +54,6 @@ image.platform = {
   }
 };
 
+image.components = {};
 image.apps = {};
 image.instances = {};

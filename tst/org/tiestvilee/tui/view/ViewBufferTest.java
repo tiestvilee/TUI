@@ -16,8 +16,9 @@ public class ViewBufferTest {
 
 	static final Tixel tixel = new Tixel(glyph, null);
 	static final Tixel emptyTixel = new Tixel(glyph, null);
+    private boolean gotRedraw;
 
-	@Test
+    @Test
 	public void shouldPlaceTixelAtPosition() {
 		ViewBuffer view = new ViewBuffer(new Rectangle(100,100), emptyTixel);
 		Position position = new Position(3,4);
@@ -168,5 +169,21 @@ public class ViewBufferTest {
         ViewBuffer view = new ViewBuffer(new Rectangle(5,6,7,8), emptyTixel);
 
         assertEquals(view.getClip(), new Rectangle(5,6,7,8));
+    }
+
+    @Test
+    public void shouldInformListenersOfRedrawRequest() {
+        ViewBuffer view = new ViewBuffer(new Rectangle(5,6,7,8), emptyTixel);
+        gotRedraw = false;
+        view.listenForRedraw(new RedrawListener() {
+            @Override
+            public void gotRedraw() {
+                gotRedraw = true;
+            }
+        });
+
+        view.redraw();
+
+        assertTrue(gotRedraw);
     }
 }

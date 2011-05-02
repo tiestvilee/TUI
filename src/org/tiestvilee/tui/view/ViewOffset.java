@@ -4,7 +4,7 @@ import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.primitives.Tixel;
 
-public class ViewOffset extends View {
+public class ViewOffset extends View implements RedrawListener {
 
     private final View underlyingView;
     private Position offset;
@@ -13,6 +13,7 @@ public class ViewOffset extends View {
         super(emptyTixel);
         this.underlyingView = underlyingView;
         this.offset = offset;
+        underlyingView.listenForRedraw(this);
     }
 
     @Override
@@ -42,5 +43,10 @@ public class ViewOffset extends View {
 
     public void mutateBy(Position position) {
         offset = offset.offsetBy(position);
+    }
+
+    @Override
+    public void gotRedraw() {
+        redraw();
     }
 }

@@ -37,7 +37,7 @@ public class Tui {
         ImageLoader imageLoader = new ImageLoader(new FileWrapper());
         JavascriptRunner imageRunner = imageLoader.loadImage("tui.image", view, characterMap);
 
-        imageLoader.saveImage(imageRunner, "temp.image");
+        //imageLoader.saveImage(imageRunner, "temp.image");
 
 		Manager manager = new Manager(imageRunner);
 
