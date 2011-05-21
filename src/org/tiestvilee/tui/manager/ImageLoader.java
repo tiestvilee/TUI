@@ -1,7 +1,7 @@
 package org.tiestvilee.tui.manager;
 
 import org.mozilla.javascript.Scriptable;
-import org.tiestvilee.tui.primitives.CharacterMap;
+import org.tiestvilee.tui.primitives.internal.CharacterMap;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 import java.io.File;
@@ -22,7 +22,7 @@ public class ImageLoader {
 	}
 
 
-	public JavascriptRunner loadImage(String imageName, ViewBuffer view, CharacterMap characterMap) throws Exception {
+	public JavascriptRunner loadImage(String imageName, ViewBuffer view) throws Exception {
 		JavascriptRunner runner = new JavascriptRunner();
 		runner.init();
 
@@ -30,16 +30,15 @@ public class ImageLoader {
 
 		int scriptNumber = getMostRecentScriptNumber(runner);
 
-		addViewAndCharacterMap(view, characterMap, runner);
+		addViewAndCharacterMap(view, runner);
 
 		applyNewScripts(runner, scriptNumber);
 
 		return runner;
 	}
 
-	private void addViewAndCharacterMap(ViewBuffer view, CharacterMap characterMap, JavascriptRunner runner) {
+	private void addViewAndCharacterMap(ViewBuffer view, JavascriptRunner runner) {
 		runner.addObject$As$(view, "view");
-		runner.addObject$As$(characterMap, "characterMap");
 	}
 
 	private int getMostRecentScriptNumber(JavascriptRunner runner) {

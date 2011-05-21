@@ -8,7 +8,7 @@ import org.tiestvilee.tui.Tui;
 import org.tiestvilee.tui.awt.KeyMapping;
 import org.tiestvilee.tui.primitives.Colour;
 import org.tiestvilee.tui.primitives.ColourPair;
-import org.tiestvilee.tui.primitives.Glyph;
+import org.tiestvilee.tui.primitives.internal.Glyph;
 import org.tiestvilee.tui.primitives.Hue;
 import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.view.PlainTextView;

@@ -3,7 +3,7 @@ package org.tiestvilee.tui.view;
 import java.util.Map;
 
 import org.tiestvilee.tui.primitives.ColourPair;
-import org.tiestvilee.tui.primitives.Glyph;
+import org.tiestvilee.tui.primitives.internal.Glyph;
 import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Tixel;
 
@@ -22,10 +22,7 @@ public class PlainTextView {
     } 
 
     public void setPosition$To(Position position, char c) {
-        Glyph glyph = characterMap.get(c);
-        if(glyph != null) {
-            view.setPosition$To(position, new Tixel(glyph, colourPair));
-        }
+        view.setPosition$To(position, new Tixel(c, colourPair));
     }
 
     public void write$AtCursorAndProceed(char c) {

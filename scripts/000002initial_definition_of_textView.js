@@ -33,7 +33,7 @@ image.components.textView = (function () {
 
 
     write$AtCursorAndProceed : function(c) {
-      var tixel = this.platform.newTixel(characterMap.get(c), this.colourPair);
+      var tixel = this.platform.newTixel(c, this.colourPair);
       this.view.setPosition$To(this.cursorPosition, tixel);
       this.cursorPosition = this.cursorPosition.offsetBy(this.platform.newPosition(1,0));
     },
@@ -106,7 +106,6 @@ image.components.textView = (function () {
 
   textView.integration = beget(textView.unit, {
     colourPair : new image.platform.newColourPair(new image.platform.newColour(1.0, org.tiestvilee.tui.primitives.Hue.WHITE), new image.platform.newColour(0.0, org.tiestvilee.tui.primitives.Hue.BLACK)),
-    characterMap : characterMap,
     platform : image.platform,
     cursorPosition : image.platform.newPosition(0,0),
     model: [],

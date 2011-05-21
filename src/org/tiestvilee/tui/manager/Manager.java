@@ -1,6 +1,6 @@
 package org.tiestvilee.tui.manager;
 
-import org.tiestvilee.tui.primitives.Glyph;
+import org.tiestvilee.tui.primitives.internal.Glyph;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 import java.awt.event.KeyEvent;

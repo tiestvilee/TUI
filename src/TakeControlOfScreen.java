@@ -20,6 +20,8 @@ import org.tiestvilee.tui.awt.AwtCanvas;
 import org.tiestvilee.tui.awt.AwtEmptyGlyph;
 import org.tiestvilee.tui.awt.GlyphToAlphabetMapper;
 import org.tiestvilee.tui.primitives.*;
+import org.tiestvilee.tui.primitives.internal.CharacterMap;
+import org.tiestvilee.tui.primitives.internal.Glyph;
 import org.tiestvilee.tui.view.View.ElementAction;
 import org.tiestvilee.tui.view.ViewBuffer;
 
@@ -41,7 +43,7 @@ public class TakeControlOfScreen {
         final DisplayMode old = gs.getDisplayMode();
 
         Glyph emptyGlyph = new AwtEmptyGlyph(GlyphToAlphabetMapper.WIDTH, GlyphToAlphabetMapper.HEIGHT);
-        Tixel emptyTixel = new Tixel(emptyGlyph, new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
+        Tixel emptyTixel = new Tixel(' ', new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
 
         CharacterMap characterMap = (new GlyphToAlphabetMapper()).loadMap(emptyGlyph);
 
@@ -51,7 +53,7 @@ public class TakeControlOfScreen {
         writeFile$To$Using("exampleFile.txt", view, characterMap);
 
         // Create a button that leaves full-screen mode
-        final AwtCanvas canvas = new AwtCanvas(view);
+        final AwtCanvas canvas = new AwtCanvas(characterMap, view);
         canvas.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 // Return to normal windowed mode
@@ -107,10 +109,7 @@ public class TakeControlOfScreen {
             int y = 0;
             while ((line = reader.readLine()) != null && y < 60) {
                 for (int x = 0; x < line.length(); x++) {
-                    Glyph glyph = characterMap.get(new Character(line.charAt(x)));
-                    if (glyph != null) {
-                        view.setPosition$To(new Position(x, y), new Tixel(glyph, colourPair));
-                    }
+                    view.setPosition$To(new Position(x, y), new Tixel(line.charAt(x), colourPair));
                 }
                 y++;
             }
@@ -156,8 +155,8 @@ public class TakeControlOfScreen {
 
         @Override
         public void run() {
-            Tixel t0 = new Tixel(characterMap.get('X'), new ColourPair(new Colour(1.0f, Hue.BLUE), new Colour(0.0f, Hue.BLUE)));
-            Tixel t1 = new Tixel(characterMap.get('X'), new ColourPair(new Colour(0.5f, Hue.BLUE), new Colour(0.0f, Hue.BLUE)));
+            Tixel t0 = new Tixel('X', new ColourPair(new Colour(1.0f, Hue.BLUE), new Colour(0.0f, Hue.BLUE)));
+            Tixel t1 = new Tixel('X', new ColourPair(new Colour(0.5f, Hue.BLUE), new Colour(0.0f, Hue.BLUE)));
             Random r = new Random();
 
             int[] depth = new int[50];

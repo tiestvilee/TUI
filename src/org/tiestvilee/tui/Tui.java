@@ -14,6 +14,8 @@ import org.tiestvilee.tui.manager.JavascriptRunner;
 import org.tiestvilee.tui.manager.Manager;
 import org.tiestvilee.tui.primitives.*;
 import org.tiestvilee.tui.primitives.Rectangle;
+import org.tiestvilee.tui.primitives.internal.CharacterMap;
+import org.tiestvilee.tui.primitives.internal.Glyph;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 public class Tui {
@@ -35,13 +37,13 @@ public class Tui {
             getEmptyTixel(characterMap));
 
         ImageLoader imageLoader = new ImageLoader(new FileWrapper());
-        JavascriptRunner imageRunner = imageLoader.loadImage("tui.image", view, characterMap);
+        JavascriptRunner imageRunner = imageLoader.loadImage("tui.image", view);
 
-        //imageLoader.saveImage(imageRunner, "temp.image");
+        // imageLoader.saveImage(imageRunner, "temp.image");
 
 		Manager manager = new Manager(imageRunner);
 
-        final AwtCanvas canvas = new AwtCanvas(view);
+        final AwtCanvas canvas = new AwtCanvas(characterMap, view);
 //        canvas.addMouseListener(new MouseAdapter() {
 //            public void mouseClicked(MouseEvent evt) {
 //                // Return to normal windowed mode
@@ -95,7 +97,7 @@ public class Tui {
 	}
 
 	private static Tixel getEmptyTixel(CharacterMap characterMap) {
-        return new Tixel(characterMap.get(' '), new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
+        return new Tixel(' ', new ColourPair(new Colour(1.0f, Hue.RED), new Colour(0.0f, Hue.RED)));
     }
 
     private static CharacterMap loadCharacterMap() {

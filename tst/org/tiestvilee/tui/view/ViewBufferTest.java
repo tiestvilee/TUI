@@ -8,14 +8,15 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.tiestvilee.tui.primitives.*;
+import org.tiestvilee.tui.primitives.internal.Glyph;
 import org.tiestvilee.tui.view.View.ElementAction;
 
 public class ViewBufferTest {
     static final Glyph glyph = new StubGlyph();
 
 
-	static final Tixel tixel = new Tixel(glyph, null);
-	static final Tixel emptyTixel = new Tixel(glyph, null);
+	static final Tixel tixel = new Tixel('X', null);
+	static final Tixel emptyTixel = new Tixel(' ', null);
     private boolean gotRedraw;
 
     @Test

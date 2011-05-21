@@ -4,14 +4,14 @@ import static junit.framework.Assert.*;
 
 import org.junit.Test;
 import org.tiestvilee.tui.primitives.*;
-import org.tiestvilee.tui.view.ViewBuffer;
+import org.tiestvilee.tui.primitives.internal.Glyph;
 
 public class ViewClippingTest {
     static final Glyph glyph = new StubGlyph();
 
 
-	static final Tixel tixel = new Tixel(glyph, null);
-	static final Tixel emptyTixel = new Tixel(glyph, null);
+	static final Tixel tixel = new Tixel('X', null);
+	static final Tixel emptyTixel = new Tixel(' ', null);
     private boolean didRedraw;
 
     @Test

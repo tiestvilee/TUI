@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Map;
 
-import org.tiestvilee.tui.primitives.Glyph;
+import org.tiestvilee.tui.primitives.internal.Glyph;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 public class ViewManager implements Runnable {

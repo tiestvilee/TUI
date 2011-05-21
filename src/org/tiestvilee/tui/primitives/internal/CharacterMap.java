@@ -1,5 +1,10 @@
-package org.tiestvilee.tui.primitives;
+package org.tiestvilee.tui.primitives.internal;
 
+import org.tiestvilee.tui.primitives.ColourPair;
+import org.tiestvilee.tui.primitives.Position;
+import org.tiestvilee.tui.primitives.internal.Glyph;
+
+import java.awt.*;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -26,5 +31,9 @@ public class CharacterMap implements Serializable {
 
     public Glyph get(String s) {
         return get(s.charAt(0));
+    }
+
+    public void render$At$WithColours$Onto(char glyph, Position position, ColourPair colourPair, Graphics2D g) {
+        characterMap.get(glyph).renderAt$WithColours$Onto(position, colourPair, g);
     }
 }
