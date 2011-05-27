@@ -57,7 +57,6 @@ image.apps.fileViewer = (function() {
   })
 
   main = function(view, fileName) {
-    var scrollView = view.offsetBy(image.platform.newPosition(0,0));
     var currentScrollView = image.components.scrollPane.main(view);
     var currentTextView = image.components.textView.main(currentScrollView.view);
     currentTextView.command('load ' + fileName);
@@ -69,8 +68,11 @@ image.apps.fileViewer = (function() {
 }) ();
 
 
+var topPane = image.platform.view;
+var topPane = image.components.paneWithBorder.main(image.platform.view, "title1", image.platform.newRectangle(105,24)).getView();
 image.apps.windowManager.temp.instance = beget(image.apps.windowManager.unit, {
-  currentTarget : image.apps.fileViewer.main(image.platform.view.clipTo(image.platform.newRectangle(110,24)), "hello.txt")
+  currentTarget : image.apps.fileViewer.main(topPane, "hello.txt")
 });
-image.apps.fileViewer.main(image.platform.view.offsetBy(image.platform.newPosition(0,24)).clipTo(image.platform.newRectangle(110,24)), "hello.txt")
-
+var bottomPane = image.components.paneWithBorder.main(image.platform.view, "title2", image.platform.newRectangle(0,24,106,24)).getView();
+image.apps.fileViewer.main(bottomPane, "hello.txt")
+//image.platform.view.offsetBy(image.platform.newPosition(0,24))

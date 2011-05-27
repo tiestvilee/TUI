@@ -21,8 +21,11 @@ image.platform = {
   newPosition : function(x, y) {
     return new org.tiestvilee.tui.primitives.Position(x,y);
   },
-  newRectangle : function(width, height) {
-    return new org.tiestvilee.tui.primitives.Rectangle(width, height);
+  newRectangle : function(x, y, width, height) {
+    if(!width) {
+      return new org.tiestvilee.tui.primitives.Rectangle(x, y);
+    }
+    return new org.tiestvilee.tui.primitives.Rectangle(x, y, width, height);
   },
   newColourPair : function(fore, back) {
     return new org.tiestvilee.tui.primitives.ColourPair(fore, back);

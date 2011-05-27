@@ -102,6 +102,9 @@ image.platform.view = {
       mutateTo : function(newClip) {
         clipRect = newClip;
       },
+      getClipRect : function() {
+        return clipRect;
+      },
       gotRedraw : function() {
           redraw();
       }
