@@ -1,12 +1,12 @@
 package org.tiestvilee.tui.manager;
 
 import org.mozilla.javascript.Scriptable;
-import org.tiestvilee.tui.primitives.internal.CharacterMap;
 import org.tiestvilee.tui.view.ViewBuffer;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +22,7 @@ public class ImageLoader {
 	}
 
 
-	public JavascriptRunner loadImage(String imageName, ViewBuffer view) throws Exception {
+	public JavascriptRunner loadImage(String imageName, Map<String, Object> integrationObjects) throws Exception {
 		JavascriptRunner runner = new JavascriptRunner();
 		runner.init();
 
@@ -30,15 +30,17 @@ public class ImageLoader {
 
 		int scriptNumber = getMostRecentScriptNumber(runner);
 
-		addViewAndCharacterMap(view, runner);
+		addJavaIntegrationObjects(integrationObjects, runner);
 
 		applyNewScripts(runner, scriptNumber);
 
 		return runner;
 	}
 
-	private void addViewAndCharacterMap(ViewBuffer view, JavascriptRunner runner) {
-		runner.addObject$As$(view, "view");
+	private void addJavaIntegrationObjects(Map<String, Object> integrationObjects,JavascriptRunner runner) {
+        for (Map.Entry<String, Object> entry : integrationObjects.entrySet()) {
+            runner.addObject$As$(entry.getValue(), entry.getKey());
+        }
 	}
 
 	private int getMostRecentScriptNumber(JavascriptRunner runner) {
@@ -47,7 +49,7 @@ public class ImageLoader {
 
 	private void deserializeImage(JavascriptRunner runner, String imageName) {
 		InputStream stream = fileWrapper.inputStreamFor(imageName);
-		runner.deserialize$to$andDestroyCurrentScope(stream, "image");
+		runner.deserialize$toRootWithName$andDestroyCurrentScope(stream, "image");
 	}
 
 	private void applyNewScripts(JavascriptRunner runner, int deployNumber) {

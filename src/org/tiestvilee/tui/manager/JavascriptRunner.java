@@ -46,11 +46,11 @@ public class JavascriptRunner {
 		}
 	}
 
-	public void serialize$to$andCloseStream(Scriptable result, OutputStream outputStream) {
+	public void serialize$to$andCloseStream(Scriptable root, OutputStream outputStream) {
 		try {
 			enterContext();
 			ScriptableOutputStream stream = new ScriptableOutputStream(outputStream, scope);
-			stream.writeObject(result);
+			stream.writeObject(root);
 			stream.close();
 		} catch (IOException e) {
 			throw new RuntimeException("problem serializing object", e);
@@ -59,7 +59,7 @@ public class JavascriptRunner {
 		}
 	}
 
-	public void deserialize$to$andDestroyCurrentScope(InputStream inputStream, String objectName) {
+	public void deserialize$toRootWithName$andDestroyCurrentScope(InputStream inputStream, String objectName) {
 		try {
 			// enterContext();
 

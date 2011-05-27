@@ -70,7 +70,7 @@ image.apps.fileViewer = (function() {
 
 
 image.apps.windowManager.temp.instance = beget(image.apps.windowManager.unit, {
-  currentTarget : image.apps.fileViewer.main(view.clipTo(image.platform.newRectangle(110,24)), "hello.txt")
+  currentTarget : image.apps.fileViewer.main(image.platform.view.clipTo(image.platform.newRectangle(110,24)), "hello.txt")
 });
-image.apps.fileViewer.main(view.offsetBy(image.platform.newPosition(0,24)).clipTo(image.platform.newRectangle(110,24)), "hello.txt")
+image.apps.fileViewer.main(image.platform.view.offsetBy(image.platform.newPosition(0,24)).clipTo(image.platform.newRectangle(110,24)), "hello.txt")
 

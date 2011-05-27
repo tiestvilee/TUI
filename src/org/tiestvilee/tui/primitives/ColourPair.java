@@ -8,7 +8,6 @@ import java.io.Serializable;
 public class ColourPair implements Serializable {
     public final Colour fore;
     public final Colour back;
-    private ColorModel colorModel;
 
     public ColourPair(Colour fore, Colour back) {
         this.fore = fore;

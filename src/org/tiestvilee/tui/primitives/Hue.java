@@ -3,13 +3,9 @@ package org.tiestvilee.tui.primitives;
 import java.awt.Color;
 import java.io.Serializable;
 
-public class Hue implements Serializable {
+public enum Hue implements Serializable {
 
-    public static final Hue BLACK = new Hue();
-    public static final Hue WHITE = new Hue();
-    public static final Hue RED = new Hue();
-    public static final Hue GREEN = new Hue();
-    public static final Hue BLUE = new Hue();
+    BLACK, WHITE, RED, GREEN, BLUE;
 
     public float getAwtHue() {
         if (this == RED) {

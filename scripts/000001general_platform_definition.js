@@ -51,6 +51,13 @@ image.platform = {
     BACKSPACE : 8,
     DELETE : 127,
     ENTER : 10
+  },
+  io : {
+    newBufferedReader : function(filename) {
+      var fr = new java.io.FileReader(filename);
+      var br = new java.io.BufferedReader(fr);
+      return br;
+    }
   }
 };
 

@@ -1,6 +1,8 @@
 package org.tiestvilee.tui;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -8,10 +10,7 @@ import javax.swing.JPanel;
 import org.tiestvilee.tui.awt.AwtCanvas;
 import org.tiestvilee.tui.awt.AwtEmptyGlyph;
 import org.tiestvilee.tui.awt.GlyphToAlphabetMapper;
-import org.tiestvilee.tui.manager.FileWrapper;
-import org.tiestvilee.tui.manager.ImageLoader;
-import org.tiestvilee.tui.manager.JavascriptRunner;
-import org.tiestvilee.tui.manager.Manager;
+import org.tiestvilee.tui.manager.*;
 import org.tiestvilee.tui.primitives.*;
 import org.tiestvilee.tui.primitives.Rectangle;
 import org.tiestvilee.tui.primitives.internal.CharacterMap;
@@ -35,11 +34,16 @@ public class Tui {
         CharacterMap characterMap = loadCharacterMap();
         ViewBuffer view = new ViewBuffer(new Rectangle(640 / GlyphToAlphabetMapper.WIDTH, 480 / GlyphToAlphabetMapper.HEIGHT),
             getEmptyTixel(characterMap));
+        IoIntegration io = new IoIntegration();
+
+        Map<String,Object> integrationObjects = new HashMap<String, Object>();
+        integrationObjects.put("view", view);
+//        integrationObjects.put("io", io);
 
         ImageLoader imageLoader = new ImageLoader(new FileWrapper());
-        JavascriptRunner imageRunner = imageLoader.loadImage("tui.image", view);
+        JavascriptRunner imageRunner = imageLoader.loadImage("tui.image", integrationObjects);
 
-        // imageLoader.saveImage(imageRunner, "temp.image");
+        imageLoader.saveImage(imageRunner, "temp.image");
 
 		Manager manager = new Manager(imageRunner);
 

@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public abstract class View implements Serializable {
-    protected final Tixel emptyTixel;
+    public final Tixel emptyTixel;
     private ArrayList<RedrawListener> redrawListeners;
 
     protected View(Tixel emptyTixel) {

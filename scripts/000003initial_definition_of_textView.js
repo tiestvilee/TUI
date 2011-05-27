@@ -38,8 +38,7 @@ image.components.textView = (function () {
       this.cursorPosition = this.cursorPosition.offsetBy(this.platform.newPosition(1,0));
     },
     load : function(filename) {
-      var fr = new java.io.FileReader(filename);
-      var br = new java.io.BufferedReader(fr);
+      var br = this.platform.io.newBufferedReader(filename);
       var line;
       while(true) {
         var line = br.readLine();
@@ -108,15 +107,14 @@ image.components.textView = (function () {
     colourPair : new image.platform.newColourPair(new image.platform.newColour(1.0, org.tiestvilee.tui.primitives.Hue.WHITE), new image.platform.newColour(0.0, org.tiestvilee.tui.primitives.Hue.BLACK)),
     platform : image.platform,
     cursorPosition : image.platform.newPosition(0,0),
-    model: [],
+    model: [[]],
   });
 
   textView.main = function(view) {
     var result = beget(textView.integration, {
       view : view
     });
-    var jListener = new org.tiestvilee.tui.view.RedrawListener(result);
-    view.listenForRedraw(jListener);
+    view.listenForRedraw(result);
     return result;
   }
 

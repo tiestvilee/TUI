@@ -1,5 +1,7 @@
 package org.tiestvilee.tui.view;
 
-public interface RedrawListener {
+import java.io.Serializable;
+
+public interface RedrawListener extends Serializable {
     void gotRedraw();
 }

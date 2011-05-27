@@ -71,7 +71,7 @@ public class JavascriptRunnerTest {
 		JavascriptRunner inputRunner = new JavascriptRunner();
 
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-		inputRunner.deserialize$to$andDestroyCurrentScope(inputStream, "result");
+		inputRunner.deserialize$toRootWithName$andDestroyCurrentScope(inputStream, "result");
 		inputStream.close();
 
 		assertThat((String) inputRunner.evaluate("hey = result.obj.ha.contents"), is("something"));
@@ -95,7 +95,7 @@ public class JavascriptRunnerTest {
 		JavascriptRunner inputRunner = new JavascriptRunner();
 
 		FileInputStream input = new FileInputStream(new File("blank.image"));
-		inputRunner.deserialize$to$andDestroyCurrentScope(input, "image");
+		inputRunner.deserialize$toRootWithName$andDestroyCurrentScope(input, "image");
 		input.close();
 
 		assertThat((Double) inputRunner.evaluate("hey = image.scriptNumber;"), is(0.0));
