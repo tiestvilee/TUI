@@ -23,14 +23,14 @@ image.components.scrollPane = (function() {
   return {unit: unit, main: main};
 }) ();
 
-image.components.paneWithBorder = (function() {
+image.components.paneWithTitle = (function() {
   var unit = {
     title : null,
     view : null,
     childView : null,
     resize : function(newClip) {
       this.view.mutateTo(newClip);
-      this.childView.mutateTo(image.platform.newRectangle(0, 1, newClip.width-1,newClip.height-1));
+      this.childView.mutateTo(image.platform.newRectangle(0, 1, newClip.width, newClip.height-1));
       this.gotRedraw();
     },
     gotRedraw : function() {
@@ -43,9 +43,6 @@ image.components.paneWithBorder = (function() {
       }
       for(; x<this.view.getClip().width; x++) {
         this.view.setPosition$To(image.platform.newPosition(x, 0), greyTx);
-      }
-      for(var y=1; y<this.view.getClip().height; y++) {
-        this.view.setPosition$To(image.platform.newPosition(x-1, y), greyTx);
       }
     },
 

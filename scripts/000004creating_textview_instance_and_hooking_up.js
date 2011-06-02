@@ -34,6 +34,7 @@ image.apps.fileViewer = (function() {
     keymappings : null,
     scrollView : null,
     keyPressed : function(keyEvent) {
+    java.lang.System.out.println("got code " + keyEvent.getKeyCode());
       switch(keyEvent.getKeyCode()) {
         case this.keymappings.LEFT :
             this.scrollView.offsetBy(image.platform.newPosition(-1, 0));
@@ -69,10 +70,10 @@ image.apps.fileViewer = (function() {
 
 
 var topPane = image.platform.view;
-var topPane = image.components.paneWithBorder.main(image.platform.view, "title1", image.platform.newRectangle(105,24)).getView();
+var topPane = image.components.paneWithTitle.main(image.platform.view, "title1", image.platform.newRectangle(105,24)).getView();
 image.apps.windowManager.temp.instance = beget(image.apps.windowManager.unit, {
   currentTarget : image.apps.fileViewer.main(topPane, "hello.txt")
 });
-var bottomPane = image.components.paneWithBorder.main(image.platform.view, "title2", image.platform.newRectangle(0,24,106,24)).getView();
+var bottomPane = image.components.paneWithTitle.main(image.platform.view, "title2", image.platform.newRectangle(0,24,106,24)).getView();
 image.apps.fileViewer.main(bottomPane, "hello.txt")
 //image.platform.view.offsetBy(image.platform.newPosition(0,24))

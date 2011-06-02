@@ -1,13 +1,13 @@
 package org.tiestvilee.tui.awt;
 
-import org.tiestvilee.tui.primitives.Colour;
-import org.tiestvilee.tui.primitives.ColourPair;
-
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.tiestvilee.tui.primitives.Colour;
+import org.tiestvilee.tui.primitives.ColourPair;
 
 public class AwtColorConverter {
     Map<ColourPair, ColorModel> colorModels = new HashMap<ColourPair, ColorModel>();
@@ -37,7 +37,7 @@ public class AwtColorConverter {
         return colorModel;
     }
 
-    public Color getAwtColorFor(Colour colour) {
+    public static Color getAwtColorFor(Colour colour) {
         return Color.getHSBColor(colour.hue.getAwtHue(), colour.hue.getAwtSaturation(), colour.intensity);
     }
 }

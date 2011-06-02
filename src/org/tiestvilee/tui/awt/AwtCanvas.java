@@ -1,6 +1,7 @@
 package org.tiestvilee.tui.awt;
 
 import java.awt.Canvas;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.util.Collection;
@@ -10,8 +11,8 @@ import java.util.Set;
 import org.tiestvilee.tui.primitives.Position;
 import org.tiestvilee.tui.primitives.Tixel;
 import org.tiestvilee.tui.primitives.internal.CharacterMap;
-import org.tiestvilee.tui.view.View.ElementAction;
 import org.tiestvilee.tui.view.ViewBuffer;
+import org.tiestvilee.tui.view.View.ElementAction;
 
 public class AwtCanvas extends Canvas {
 
@@ -30,6 +31,8 @@ public class AwtCanvas extends Canvas {
         this.view = view;
         setBounds(0, 0, 640, 480);
         setIgnoreRepaint(true);
+        Font font = new Font(Font.MONOSPACED, Font.PLAIN, 8);
+        setFont(font);
     }
 
     public void showYourself() {
@@ -37,8 +40,8 @@ public class AwtCanvas extends Canvas {
         paintWholeScreen();
         paintWholeScreen();
 
-        long currentTime = System.currentTimeMillis();
         while (running) {
+            long currentTime = System.currentTimeMillis();
             Set<Position> dirtyElements = view.getDirtyElementsAndClearThem();
             oldDirtyElements.addAll(dirtyElements);
             paintChangesSinceLastFrame(oldDirtyElements);
@@ -54,7 +57,12 @@ public class AwtCanvas extends Canvas {
 
     private void ensure30FramesASecond(long currentTime) {
         try {
-            Thread.sleep((1000 / 30) - (System.currentTimeMillis() - currentTime));
+            long timeToWait = (1000 / 30) - (System.currentTimeMillis() - currentTime);
+            if(timeToWait < 0) {
+                timeToWait = 100;
+                System.out.println("timed out, waiting a bit to see if we can catch up " + (System.currentTimeMillis() - currentTime));
+            }
+            Thread.sleep(timeToWait);
         } catch (Exception e) {
             // do nothing
         }
@@ -67,7 +75,7 @@ public class AwtCanvas extends Canvas {
             @Override
             public void action(Position position, Tixel tixel) {
                 characterMap = characterMap;
-                tixel.renderAt$On(position, characterMap, g);
+                tixel.renderAt$UsingCharacters$Onto(position, characterMap, g);
             }
         });
 
@@ -89,7 +97,7 @@ public class AwtCanvas extends Canvas {
         }
 
         for (Position position : dirtyElements) {
-            view.getTixelAt(position).renderAt$On(position, characterMap, g);
+            view.getTixelAt(position).renderAt$UsingCharacters$Onto(position, characterMap, g);
         }
 
         if (VERBOSE) {

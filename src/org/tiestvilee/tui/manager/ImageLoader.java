@@ -6,6 +6,8 @@ import org.tiestvilee.tui.view.ViewBuffer;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,7 +58,9 @@ public class ImageLoader {
 
 		System.out.println("loading files after " + deployNumber);
 
-		for(File file : fileWrapper.getFilesInDirectory("scripts")) {
+		File[] filesInDirectory = fileWrapper.getFilesInDirectory("scripts");
+		Arrays.sort(filesInDirectory);
+		for(File file : filesInDirectory) {
 			// alphabetical order.
 			Matcher matcher = MATCH_DIGITS_AT_FRONT_OF_FILE.matcher(file.getName());
 			if(matcher.matches()) {

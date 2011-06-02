@@ -34,6 +34,6 @@ public class CharacterMap implements Serializable {
     }
 
     public void render$At$WithColours$Onto(char glyph, Position position, ColourPair colourPair, Graphics2D g) {
-        characterMap.get(glyph).renderAt$WithColours$Onto(position, colourPair, g);
+        get(glyph).renderAt$WithColours$Onto(position, colourPair, g);
     }
 }
