@@ -45,11 +45,18 @@ public class AwtGlyph implements Glyph {
 
     @Override
     public void renderAt$WithColours$Onto(Position position, ColourPair colourPair, Graphics2D g) {
+        g.drawImage(alphabet, position.x * width, position.y * height, position.x * width + width, position.y * height + height, x, y, x + width, y + height, null);
+
+    }
+
+    /*
+    Got the following results for various rendering approaches
         if(false) {
             Image bf = map.get(colourPair);
             if (bf == null) {
                 bf = new BufferedImage(converter.getColorModelFor(colourPair), image.getRaster(), false, null);
                 map.put(colourPair, bf);
+                // 3.74, 3.79, 3.82
             }
             g.drawImage(bf, position.x * width, position.y * height, null);
         } else if (false) {
@@ -57,6 +64,8 @@ public class AwtGlyph implements Glyph {
             if (image == null) {
                 GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
                 image = gc.createCompatibleImage(8, height);
+                // 8 bits wide -> 3.93
+                // 5 bits wide -> 3.79,3.86,3.91
                 Image temp = new BufferedImage(converter.getColorModelFor(colourPair), this.image.getRaster(), false, null);
                 image.getGraphics().drawImage(temp, 0, 0, null);
                 map.put(colourPair, image);
@@ -64,11 +73,13 @@ public class AwtGlyph implements Glyph {
                 System.out.println(".... " + g.getDeviceConfiguration().getColorModel().getPixelSize());
             }
             g.drawImage(image, position.x * width, position.y * height, null);
-        } else if (true) {
+        } else if (false) {
             Image image = map.get(colourPair);
             if (image == null) {
                 GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
                 image = gc.createCompatibleVolatileImage(8, height, Transparency.OPAQUE);
+                // 8 bits wide -> 3.82,3.88,3.89
+                // 5 bits wide -> 3.68,3.85,3.86
                 image.setAccelerationPriority(0.0f);
                 Image temp = new BufferedImage(converter.getColorModelFor(colourPair), this.image.getRaster(), false, null);
                 image.getGraphics().drawImage(temp, 0, 0, null);
@@ -80,11 +91,17 @@ public class AwtGlyph implements Glyph {
             g.drawImage(image, position.x * width, position.y * height, null);
             //            total += System.nanoTime();
         } else if (false) {
+//            g.drawChars(new char[] {'A'}, 0, 1, position.x * width, position.y * height);
+            // 5.57, 5.86
             g.drawChars(new char[] {'A', 'B', 'C', 'D'}, 0, 4, position.x * width, position.y * height);
+            // 12.2
         } else {
-            g.drawImage(alphabet, x, y, width, height, position.x * width, position.y * height, width, height, null);
+            g.drawImage(alphabet, position.x * width, position.y * height, position.x * width + width, position.y * height + height, x, y, x + width, y + height, null);
+            // 3.55,3.55,3.55!!!
         }
-    }
+
+        */
+
     /*
     public AwtGlyph(AwtColorConverter converter, BufferedImage alphabet, Rectangle clip) {
         this.converter = converter;

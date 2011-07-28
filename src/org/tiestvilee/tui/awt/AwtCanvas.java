@@ -23,8 +23,8 @@ public class AwtCanvas extends Canvas {
     public boolean running = true;
 
     private BufferStrategy strategy;
-    private Set<Position> oldDirtyElements = new HashSet<Position>();
     private CharacterMap characterMap;
+
 
     public AwtCanvas(CharacterMap characterMap, ViewBuffer view) {
         this.characterMap = characterMap;
@@ -42,13 +42,8 @@ public class AwtCanvas extends Canvas {
 
         while (running) {
             long currentTime = System.currentTimeMillis();
-            //            Set<Position> dirtyElements = view.getDirtyElementsAndClearThem();
-            //            oldDirtyElements.addAll(dirtyElements);
-            //            paintChangesSinceLastFrame(oldDirtyElements);
-            //            oldDirtyElements = dirtyElements;
             paintWholeScreen();
-            System.out.println(System.currentTimeMillis() - currentTime);
-            //            ensure30FramesASecond(currentTime);
+            ensure30FramesASecond(currentTime);
         }
     }
 
@@ -73,48 +68,15 @@ public class AwtCanvas extends Canvas {
     private void paintWholeScreen() {
         final Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 
-        long currentTime = System.currentTimeMillis();
         view.forEachElementDo(new ElementAction() {
             @Override
             public void action(Position position, Tixel tixel) {
-                characterMap = characterMap;
                 tixel.renderAt$UsingCharacters$Onto(position, characterMap, g);
             }
         });
-        System.out.print((System.currentTimeMillis() - currentTime) + "  ");
-        System.out.print(AwtGlyph.total/1000 + "  ");
-        AwtGlyph.total = 0;
 
         g.dispose();
         strategy.show();
     }
 
-    public void paintChangesSinceLastFrame(Collection<Position> dirtyElements) {
-        drawScreenToBuffer(dirtyElements, strategy);
-        strategy.show();
-    }
-
-    private void drawScreenToBuffer(Collection<Position> dirtyElements, BufferStrategy strategy2) {
-        final Graphics2D g = (Graphics2D) strategy2.getDrawGraphics();
-
-        long start;
-        if (VERBOSE) {
-            start = System.currentTimeMillis();
-        }
-
-        for (Position position : dirtyElements) {
-            view.getTixelAt(position).renderAt$UsingCharacters$Onto(position, characterMap, g);
-        }
-
-        if (VERBOSE) {
-            long end = System.currentTimeMillis();
-            if ((end - start) == 0) {
-                System.out.print('.');
-            } else {
-                System.out.println("one frame took " + (end - start));
-            }
-        }
-
-        g.dispose();
-    }
 }
