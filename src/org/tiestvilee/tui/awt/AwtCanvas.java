@@ -42,11 +42,13 @@ public class AwtCanvas extends Canvas {
 
         while (running) {
             long currentTime = System.currentTimeMillis();
-            Set<Position> dirtyElements = view.getDirtyElementsAndClearThem();
-            oldDirtyElements.addAll(dirtyElements);
-            paintChangesSinceLastFrame(oldDirtyElements);
-            oldDirtyElements = dirtyElements;
-            ensure30FramesASecond(currentTime);
+            //            Set<Position> dirtyElements = view.getDirtyElementsAndClearThem();
+            //            oldDirtyElements.addAll(dirtyElements);
+            //            paintChangesSinceLastFrame(oldDirtyElements);
+            //            oldDirtyElements = dirtyElements;
+            paintWholeScreen();
+            System.out.println(System.currentTimeMillis() - currentTime);
+            //            ensure30FramesASecond(currentTime);
         }
     }
 
@@ -71,6 +73,7 @@ public class AwtCanvas extends Canvas {
     private void paintWholeScreen() {
         final Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 
+        long currentTime = System.currentTimeMillis();
         view.forEachElementDo(new ElementAction() {
             @Override
             public void action(Position position, Tixel tixel) {
@@ -78,6 +81,9 @@ public class AwtCanvas extends Canvas {
                 tixel.renderAt$UsingCharacters$Onto(position, characterMap, g);
             }
         });
+        System.out.print((System.currentTimeMillis() - currentTime) + "  ");
+        System.out.print(AwtGlyph.total/1000 + "  ");
+        AwtGlyph.total = 0;
 
         g.dispose();
         strategy.show();
